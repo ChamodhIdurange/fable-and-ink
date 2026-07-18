@@ -60,6 +60,7 @@ export const api = {
 
   // profile
   profile: () => request('/me/profile'),
+  updateProfile: (patch) => request('/me/profile', { method: 'PATCH', body: patch }),
 
   // stubbed AI
   beautify: (text) => request('/ai/beautify', { method: 'POST', body: { text } }),

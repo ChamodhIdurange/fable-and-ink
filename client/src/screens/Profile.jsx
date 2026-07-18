@@ -1,160 +1,222 @@
+import { useState } from 'react'
 import { genreColor } from '../data.js'
-import { IconChevronRight, IconGitFork } from '../components/Icon.jsx'
+import { IconChevronRight, IconGitFork, IconBook, IconAudioLines, IconSparkles } from '../components/Icon.jsx'
 
-export default function Profile({ profile }) {
+const compact = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n ?? 0))
+
+export default function Profile({ profile, openStory, go, saveProfile }) {
+  const [editing, setEditing] = useState(false)
+  const [nameDraft, setNameDraft] = useState('')
+  const [bioDraft, setBioDraft] = useState('')
+  const [saving, setSaving] = useState(false)
+
   if (!profile) {
     return (
-      <main style={{ flex: 1, display: 'grid', placeItems: 'center', padding: 48 }}>
+      <main className="fi-loading">
         <span className="meta">Loading profile…</span>
       </main>
     )
   }
-  const { user, published = [], theirForks = [] } = profile
+  const { user, stats, published = [], theirForks = [] } = profile
+  const firstName = user.name.split(' ')[0]
+
+  const startEdit = () => {
+    setNameDraft(user.name)
+    setBioDraft(user.bio ?? '')
+    setEditing(true)
+  }
+  const submitEdit = async (e) => {
+    e.preventDefault()
+    setSaving(true)
+    const ok = await saveProfile({ name: nameDraft, bio: bioDraft })
+    setSaving(false)
+    if (ok) setEditing(false)
+  }
 
   return (
-    <main
-      data-screen-label="Profile"
-      style={{ width: '100%', maxWidth: 760, margin: '0 auto', padding: '32px 24px 64px', flex: 1 }}
-    >
+    <main data-screen-label="Profile" className="fi-page fi-page--profile">
       {/* Header card */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: 20,
-          marginBottom: 40,
-          padding: 32,
-          borderRadius: 24,
-          background: 'var(--nxb-neutral-purple-150)',
-        }}
-      >
-        <span
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: 9999,
-            background: 'var(--nxb-surface-1)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 20,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--nxb-text-primary)',
-            flex: 'none',
-          }}
-        >
+      <div className="fi-profile-head">
+        <span className="fi-avatar fi-avatar--lg" style={{ background: 'var(--nxb-surface-1)' }}>
           {user.initials}
         </span>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
-          <h1 className="h1" style={{ margin: 0 }}>
-            {user.name}
-          </h1>
-          <span className="meta">{user.summary}</span>
-          <p className="body" style={{ margin: '4px 0 0', color: 'var(--nxb-text-secondary)', maxWidth: '52ch' }}>
-            {user.bio}
-          </p>
-        </div>
-        <button className="nxb-btn nxb-btn--secondary nxb-btn--sm" style={{ flex: 'none' }}>
-          Edit Profile
-        </button>
-      </div>
 
-      {/* Published */}
-      <h2 className="h2" style={{ margin: '0 0 12px' }}>
-        Published
-      </h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 40 }}>
-        {published.map((o) => {
-          const c = genreColor(o.genre)
-          return (
-            <div
-              key={o.id}
-              className="fi-row-hover"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                padding: '16px 20px',
-                borderRadius: 16,
-                background: 'var(--fi-card)',
-                border: '0.5px solid var(--nxb-border-low)',
-                cursor: 'pointer',
-              }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, minWidth: 0 }}>
-                <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
-                  {o.title}
-                </span>
-                <span className="meta">{o.meta}</span>
-              </div>
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  letterSpacing: '0.4px',
-                  textTransform: 'uppercase',
-                  color: c,
-                  background: `color-mix(in srgb, ${c} 10%, transparent)`,
-                  borderRadius: 4,
-                  padding: '3px 7px',
-                  whiteSpace: 'nowrap',
-                }}
+        {!editing && (
+          <>
+            <div className="fi-profile-head__info">
+              <h1 className="h1">{user.name}</h1>
+              <span className="meta">{user.summary}</span>
+              <p className="body fi-profile-head__bio">{user.bio}</p>
+            </div>
+            <div className="fi-profile-head__actions">
+              <button className="nxb-btn nxb-btn--secondary nxb-btn--sm" onClick={startEdit}>
+                Edit Profile
+              </button>
+              <button className="nxb-btn nxb-btn--primary nxb-btn--sm" onClick={() => go('editor')}>
+                <IconSparkles size={16} />
+                Open your draft
+              </button>
+            </div>
+          </>
+        )}
+
+        {editing && (
+          <form className="fi-profile-edit" onSubmit={submitEdit}>
+            <div className="fi-field">
+              <label className="label" htmlFor="prof-name">
+                name
+              </label>
+              <input
+                id="prof-name"
+                className="fi-input"
+                value={nameDraft}
+                onChange={(e) => setNameDraft(e.target.value)}
+                maxLength={80}
+                required
+              />
+            </div>
+            <div className="fi-field">
+              <label className="label" htmlFor="prof-bio">
+                bio
+              </label>
+              <textarea
+                id="prof-bio"
+                className="fi-textarea"
+                value={bioDraft}
+                onChange={(e) => setBioDraft(e.target.value)}
+                maxLength={500}
+                rows={3}
+              />
+              <span className="meta">{bioDraft.length}/500 — a line or two about what you write.</span>
+            </div>
+            <div className="fi-row fi-row--8">
+              <button type="submit" className="nxb-btn nxb-btn--primary nxb-btn--sm" disabled={saving}>
+                {saving ? 'Saving…' : 'Save changes'}
+              </button>
+              <button
+                type="button"
+                className="nxb-btn nxb-btn--secondary nxb-btn--sm"
+                onClick={() => setEditing(false)}
+                disabled={saving}
               >
-                {o.genre}
-              </span>
-              <IconChevronRight size={16} style={{ color: 'var(--nxb-text-disabled)', flex: 'none' }} />
+                Cancel
+              </button>
             </div>
-          )
-        })}
+          </form>
+        )}
       </div>
 
-      {/* Forks of her work */}
-      <h2 className="h2" style={{ margin: '0 0 4px' }}>
-        Forks of her work
-      </h2>
-      <p className="body-s" style={{ margin: '0 0 12px', color: 'var(--nxb-text-muted)' }}>
-        Other writers building on {user.name.split(' ')[0]}&rsquo;s stories — every fork links back.
-      </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {theirForks.map((f) => (
-          <div
-            key={f.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '16px 20px',
-              borderRadius: 16,
-              background: 'var(--fi-card)',
-              border: '0.5px solid var(--nxb-border-low)',
-            }}
-          >
-            <IconGitFork size={16} style={{ color: 'var(--nxb-text-muted)', flex: 'none' }} />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, minWidth: 0 }}>
-              <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
-                {f.title}
-              </span>
-              <span className="meta">
-                {f.by} · forked from {f.from}
-              </span>
-            </div>
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 10,
-                letterSpacing: '0.5px',
-                textTransform: 'uppercase',
-                color: 'var(--nxb-text-muted)',
-                border: '0.5px solid var(--nxb-border-medium)',
-                borderRadius: 4,
-                padding: '2px 6px',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {f.kind}
+      {/* Stats band */}
+      {stats && (
+        <div className="fi-stats">
+          <div className="fi-stat">
+            <span className="fi-stat__label">Published stories</span>
+            <span className="fi-stat__value">{stats.published}</span>
+          </div>
+          <div className="fi-stat">
+            <span className="fi-stat__label">Total reads</span>
+            <span className="fi-stat__value">{compact(stats.totalReads)}</span>
+          </div>
+          <div className="fi-stat">
+            <span className="fi-stat__label">Forks of {firstName}&rsquo;s work</span>
+            <span className="fi-stat__value">{stats.totalForks}</span>
+          </div>
+          <div className="fi-stat">
+            <span className="fi-stat__label">Writing since</span>
+            <span className="fi-stat__value">{stats.joinedYear}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Two columns: published | forks of their work */}
+      <div className="fi-profile-cols">
+        <section>
+          <div className="fi-section-head" style={{ marginBottom: 12 }}>
+            <h2 className="h2" style={{ margin: 0 }}>
+              Published
+            </h2>
+            <span className="meta">tap a story to read it</span>
+          </div>
+          <div className="fi-stack fi-stack--8">
+            {published.map((o) => {
+              const c = genreColor(o.genre)
+              return (
+                <button key={o.id} className="fi-list-row fi-list-row--btn fi-row-hover" onClick={() => openStory(o.id)}>
+                  <IconBook size={16} style={{ color: 'var(--nxb-text-muted)', flex: 'none' }} />
+                  <div className="fi-list-row__text">
+                    <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
+                      {o.title}
+                    </span>
+                    {o.blurb && <span className="body-s fi-list-row__blurb">{o.blurb}</span>}
+                    <span className="meta">{o.meta}</span>
+                  </div>
+                  <span
+                    className="fi-tag"
+                    style={{ color: c, background: `color-mix(in srgb, ${c} 10%, transparent)` }}
+                  >
+                    {o.genre}
+                  </span>
+                  <IconChevronRight size={16} style={{ color: 'var(--nxb-text-disabled)', flex: 'none' }} />
+                </button>
+              )
+            })}
+            {!published.length && (
+              <div className="fi-empty">
+                <p className="body" style={{ margin: 0, color: 'var(--nxb-text-muted)' }}>
+                  Nothing published yet — your first story is waiting in the editor.
+                </p>
+                <button className="nxb-btn nxb-btn--primary nxb-btn--sm" onClick={() => go('editor')}>
+                  Start writing
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section>
+          <div className="fi-section-head" style={{ marginBottom: 12 }}>
+            <h2 className="h2" style={{ margin: 0 }}>
+              Forks of {firstName}&rsquo;s work
+            </h2>
+          </div>
+          <p className="body-s" style={{ margin: '0 0 12px', color: 'var(--nxb-text-muted)' }}>
+            Other writers building on {firstName}&rsquo;s stories — every fork links back.
+          </p>
+          <div className="fi-stack fi-stack--8">
+            {theirForks.map((f) => (
+              <button key={f.id} className="fi-list-row fi-list-row--btn fi-row-hover" onClick={() => openStory(f.id)}>
+                <IconGitFork size={16} style={{ color: 'var(--nxb-text-muted)', flex: 'none' }} />
+                <div className="fi-list-row__text">
+                  <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
+                    {f.title}
+                  </span>
+                  <span className="meta">
+                    {f.by} · forked from {f.from}
+                  </span>
+                </div>
+                <span className="fi-tag fi-tag--outline">{f.kind}</span>
+                <IconChevronRight size={16} style={{ color: 'var(--nxb-text-disabled)', flex: 'none' }} />
+              </button>
+            ))}
+            {!theirForks.length && (
+              <div className="fi-empty">
+                <p className="body" style={{ margin: 0, color: 'var(--nxb-text-muted)' }}>
+                  No forks yet — when someone remixes one of {firstName}&rsquo;s stories, it shows up
+                  here with a link back.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Listen nudge keeps the column balanced and gives the page a real action */}
+          <div className="fi-profile-tip">
+            <IconAudioLines size={18} style={{ color: 'var(--nxb-text-link)', flex: 'none' }} />
+            <span className="body-s" style={{ color: 'var(--nxb-text-secondary)' }}>
+              Every published story here can be listened to — open one and hit{' '}
+              <strong>Listen</strong> for adaptive narration.
             </span>
           </div>
-        ))}
+        </section>
       </div>
     </main>
   )

@@ -9,7 +9,7 @@ import Profile from './screens/Profile.jsx'
 import MobileReader from './screens/MobileReader.jsx'
 import { IconGitFork, IconCheck, IconX } from './components/Icon.jsx'
 import { forkKindDefs, genreOptions, speeds } from './data.js'
-import { api, getToken, setToken } from './api.js'
+import { api, getToken, setToken, clearToken } from './api.js'
 
 export default function App() {
   // ---- session + remote data ----
@@ -47,6 +47,10 @@ export default function App() {
   const [beautifyOpen, setBeautifyOpen] = useState(false)
   const [highlightScene, setHighlightScene] = useState(null)
   const [suggestions, setSuggestions] = useState([])
+  const [beautifyLoading, setBeautifyLoading] = useState(false)
+  const [beautifyError, setBeautifyError] = useState(null)
+  const [healthLoading, setHealthLoading] = useState(false)
+  const [healthError, setHealthError] = useState(null)
   const [dragId, setDragId] = useState(null)
 
   const [pubTitle, setPubTitle] = useState('')
@@ -71,8 +75,18 @@ export default function App() {
           setToken(token)
           setCurrentUser(user)
         } else {
-          const { user } = await api.me()
-          setCurrentUser(user)
+          try {
+            const { user } = await api.me()
+            setCurrentUser(user)
+          } catch {
+            // Stale token — the in-memory DB reseeds on every server restart,
+            // so old sessions point at users that no longer exist. Recover by
+            // logging in as the demo author again.
+            clearToken()
+            const { token, user } = await api.demoLogin()
+            setToken(token)
+            setCurrentUser(user)
+          }
         }
         const [s, p] = await Promise.all([api.feed({ genre: 'All', blind: false }), api.progress()])
         setSamples(s.stories)
@@ -171,11 +185,25 @@ export default function App() {
         setPubBlurb(d.blurb || '')
         setPubGenresSel(d.genres?.length ? d.genres : ['Literary'])
         setVisibility(d.visibility || 'public')
-        const { notes } = await api.health(d.id)
-        setHealthNotes(notes)
+        await runHealth(d.id)
       }
     } catch (err) {
       console.error('Draft load failed:', err)
+    }
+  }
+
+  async function runHealth(storyId) {
+    setHealthLoading(true)
+    setHealthError(null)
+    try {
+      const { notes } = await api.health(storyId)
+      setHealthNotes(notes)
+    } catch (err) {
+      console.error('Health check failed:', err)
+      setHealthNotes([])
+      setHealthError(err.message || 'Story Health is unavailable right now — try again later.')
+    } finally {
+      setHealthLoading(false)
     }
   }
 
@@ -184,6 +212,21 @@ export default function App() {
       setProfile(await api.profile())
     } catch (err) {
       console.error('Profile load failed:', err)
+    }
+  }
+
+  // Save name/bio edits from the Profile screen; keeps the header user in sync.
+  const saveProfile = async (patch) => {
+    try {
+      const fresh = await api.updateProfile(patch)
+      setProfile(fresh)
+      setCurrentUser((u) => (u ? { ...u, name: fresh.user.name, initials: fresh.user.initials } : u))
+      showToast('Profile updated')
+      return true
+    } catch (err) {
+      console.error('Profile update failed:', err)
+      showToast(err.message || 'Could not update profile')
+      return false
     }
   }
 
@@ -245,12 +288,17 @@ export default function App() {
     setTab('write')
     setBeautifyOpen(true)
     if (!draft) return
+    setSuggestions([])
+    setBeautifyLoading(true)
+    setBeautifyError(null)
     try {
       const { suggestions: s } = await api.beautify(draft.draftBody)
       setSuggestions(s.map((x) => ({ ...x, status: 'pending' })))
     } catch (err) {
       console.error('Beautify failed:', err)
-      showToast('Beautify is unavailable')
+      setBeautifyError(err.message || 'Beautify is unavailable right now — try again later.')
+    } finally {
+      setBeautifyLoading(false)
     }
   }
 
@@ -368,7 +416,7 @@ export default function App() {
   const wordCount = (draft?.draftBody ?? '').trim().split(/\s+/).filter(Boolean).length.toLocaleString('en-US')
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--nxb-surface-1)', display: 'flex', flexDirection: 'column' }}>
+    <div className="fi-app">
       <Header screen={screen} dark={dark} go={go} toggleTheme={() => setDark((v) => !v)} user={currentUser} />
 
       {screen === 'home' && (
@@ -442,6 +490,11 @@ export default function App() {
           beautifyOpen={beautifyOpen}
           runBeautify={runBeautify}
           closeBeautify={() => setBeautifyOpen(false)}
+          beautifyLoading={beautifyLoading}
+          beautifyError={beautifyError}
+          healthLoading={healthLoading}
+          healthError={healthError}
+          retryHealth={() => draft && runHealth(draft.id)}
           healthOpen={healthOpen}
           toggleHealth={() => setHealthOpen((v) => !v)}
           suggestions={suggestions}
@@ -472,7 +525,9 @@ export default function App() {
         />
       )}
 
-      {screen === 'profile' && <Profile profile={profile} />}
+      {screen === 'profile' && (
+        <Profile profile={profile} openStory={openStory} go={go} saveProfile={saveProfile} />
+      )}
 
       {screen === 'mobile' && (
         <MobileReader playing={playing} togglePlay={togglePlay} progress={progress} story={currentStory} />
@@ -481,8 +536,8 @@ export default function App() {
       {/* Fork modal */}
       {forkModalOpen && (
         <div className="nxb-alert__backdrop" onClick={() => setForkModalOpen(false)}>
-          <div className="nxb-alert" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 400 }}>
-            <h3 className="nxb-alert__title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="nxb-alert fi-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+            <h3 className="nxb-alert__title fi-modal__title">
               <IconGitFork size={16} />
               Fork this story
             </h3>
@@ -490,43 +545,19 @@ export default function App() {
               A fork copies the text into your drafts and keeps a visible link back to{' '}
               {currentStory?.author ?? 'the author'}&rsquo;s original.
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+            <div className="fi-modal__opts">
               {forkKindDefs.map((k) => {
                 const selected = forkKind === k.id
                 return (
                   <button
                     key={k.id}
-                    className="fi-opt-hover"
+                    className={`fi-opt fi-opt-hover${selected ? ' is-selected' : ''}`}
                     onClick={() => setForkKind(k.id)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 12,
-                      padding: '12px 14px',
-                      borderRadius: 8,
-                      textAlign: 'left',
-                      cursor: 'pointer',
-                      background: selected ? 'rgba(132, 39, 226, 0.05)' : 'var(--nxb-surface-1)',
-                      border: `1px solid ${selected ? 'var(--nxb-text-link)' : 'var(--nxb-border-medium)'}`,
-                    }}
+                    role="radio"
+                    aria-checked={selected}
                   >
-                    <span
-                      style={{
-                        width: 16,
-                        height: 16,
-                        borderRadius: 9999,
-                        border: '1.5px solid var(--nxb-border-strong)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flex: 'none',
-                      }}
-                    >
-                      {selected && (
-                        <span style={{ width: 8, height: 8, borderRadius: 9999, background: 'var(--nxb-text-link)' }} />
-                      )}
-                    </span>
-                    <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <span className="fi-opt__radio">{selected && <span className="fi-opt__dot" />}</span>
+                    <span className="fi-opt__text">
                       <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
                         {k.title}
                       </span>
@@ -560,7 +591,7 @@ export default function App() {
 
       {/* Toast */}
       {toast && (
-        <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 60, animation: 'fablefade 250ms ease-out' }}>
+        <div className="fi-toast">
           <div className="nxb-toast">
             <div className="nxb-toast__msg">
               <span className="nxb-toast__icon nxb-toast__icon--success">

@@ -42,6 +42,7 @@ export async function buildProfile(userId: string) {
       id: String(s._id),
       title: s.title,
       genre: s.genres?.[0] ?? 'Literary',
+      blurb: s.blurb ?? '',
       meta: `${reads} reads${forkStr} · ${s.status === 'draft' ? 'draft' : 'published'}`,
     }
   })
@@ -55,10 +56,17 @@ export async function buildProfile(userId: string) {
   }))
 
   const totalForks = theirForks.length
+  const totalReads = published.reduce((sum: number, s: any) => sum + (s.readCount ?? 0), 0)
   return {
     user: {
       ...publicUser(user),
       summary: `Writing since ${user.joinedYear} · ${published.length} published stories · ${totalForks} forks of her work`,
+    },
+    stats: {
+      published: published.length,
+      totalReads,
+      totalForks,
+      joinedYear: user.joinedYear,
     },
     published: publishedCards,
     theirForks,

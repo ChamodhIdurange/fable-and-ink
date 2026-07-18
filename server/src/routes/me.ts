@@ -2,6 +2,7 @@ import { Router } from 'express'
 import mongoose from 'mongoose'
 import { Story } from '../models/Story.js'
 import { ReadingProgress } from '../models/ReadingProgress.js'
+import { User } from '../models/User.js'
 import { requireAuth, type AuthedRequest } from '../auth.js'
 import { asyncHandler, HttpError } from '../util.js'
 import { buildProfile } from './profile-shared.js'
@@ -16,6 +17,36 @@ meRouter.get(
     const profile = await buildProfile(req.userId!)
     if (!profile) throw new HttpError(404, 'User not found')
     res.json(profile)
+  }),
+)
+
+// PATCH /api/me/profile — update the signed-in author's name and/or bio.
+// Initials are derived from the name so the avatar stays in sync.
+meRouter.patch(
+  '/profile',
+  asyncHandler(async (req: AuthedRequest, res) => {
+    const { name, bio } = req.body ?? {}
+    const patch: Record<string, string> = {}
+    if (name !== undefined) {
+      if (typeof name !== 'string' || !name.trim()) throw new HttpError(400, 'Name cannot be empty')
+      if (name.trim().length > 80) throw new HttpError(400, 'Name is too long (max 80 characters)')
+      patch.name = name.trim()
+      patch.initials = patch.name
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((w) => w[0].toUpperCase())
+        .join('')
+    }
+    if (bio !== undefined) {
+      if (typeof bio !== 'string') throw new HttpError(400, 'Bio must be text')
+      if (bio.length > 500) throw new HttpError(400, 'Bio is too long (max 500 characters)')
+      patch.bio = bio.trim()
+    }
+    if (!Object.keys(patch).length) throw new HttpError(400, 'Nothing to update')
+
+    const user = await User.findByIdAndUpdate(req.userId, patch, { new: true })
+    if (!user) throw new HttpError(404, 'User not found')
+    res.json(await buildProfile(req.userId!))
   }),
 )
 

@@ -33,174 +33,52 @@ export default function Discover({
   })
 
   return (
-    <main
-      data-screen-label="Discover"
-      style={{ width: '100%', maxWidth: 1080, margin: '0 auto', padding: '32px 24px 64px', flex: 1 }}
-    >
+    <main data-screen-label="Discover" className="fi-page fi-page--wide">
       {/* Hero */}
-      <section
-        style={{
-          borderRadius: 24,
-          background: 'var(--nxb-surface-4)',
-          padding: 40,
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          gap: 24,
-          flexWrap: 'wrap',
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 560 }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 11,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              color: '#afafaf',
-            }}
-          >
+      <section className="fi-disc-hero">
+        <span className="fi-hero__glow fi-hero__glow--write" aria-hidden="true" style={{ opacity: 0.16 }} />
+        <div className="fi-disc-hero__copy">
+          <span className="fi-kicker" style={{ fontSize: 11 }}>
             Discover
           </span>
-          <h1
-            style={{
-              margin: 0,
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 500,
-              fontSize: 44,
-              lineHeight: 1.1,
-              letterSpacing: '-1px',
-              color: '#fafafa',
-              textWrap: 'balance',
-            }}
-          >
-            Stories that earn the read.
-          </h1>
-          <p
-            style={{
-              margin: 0,
-              fontFamily: 'var(--font-sans)',
-              fontSize: 16,
-              lineHeight: 1.5,
-              letterSpacing: '-0.25px',
-              color: '#afafaf',
-            }}
-          >
+          <h1 className="fi-disc-hero__title">Stories that earn the read.</h1>
+          <p className="fi-disc-hero__sub">
             Written by <span style={{ color: '#a867ee' }}>{'{anyone}'}</span>. Discovered on craft,
             not follower count.
           </p>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            padding: '10px 12px 10px 18px',
-            borderRadius: 9999,
-            background: 'rgba(255, 255, 255, 0.06)',
-            border: '0.5px solid rgba(255, 255, 255, 0.10)',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 14,
-              letterSpacing: '-0.25px',
-              color: '#fafafa',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Blind Read
-          </span>
+        <div className="fi-blind-toggle">
+          <span className="fi-blind-toggle__label">Blind Read</span>
           <button
+            className={`fi-switch${blindRead ? ' is-on' : ''}`}
             onClick={toggleBlind}
+            role="switch"
+            aria-checked={blindRead}
             aria-label="Toggle Blind Read"
-            style={{
-              width: 44,
-              height: 26,
-              borderRadius: 9999,
-              border: 0,
-              background: blindRead ? 'var(--nxb-action-primary-to)' : 'rgba(255, 255, 255, 0.20)',
-              padding: 3,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              transition: 'background 200ms ease',
-            }}
           >
-            <span
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 9999,
-                background: '#ffffff',
-                transition: 'transform 200ms ease',
-                transform: blindRead ? 'translateX(18px)' : 'translateX(0)',
-              }}
-            />
+            <span className="fi-switch__knob" />
           </button>
         </div>
       </section>
 
       {/* Blind Read active notice */}
       {blindRead && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            margin: '16px 0 0',
-            padding: '12px 16px',
-            border: 0,
-            borderRadius: 8,
-            background: 'var(--nxb-neutral-purple-150)',
-            animation: 'fablefade 200ms ease-out',
-          }}
-        >
+        <div className="fi-blind-note">
           <IconEyeOff size={16} style={{ color: 'var(--nxb-text-muted)', flex: 'none' }} />
-          <span className="body" style={{ color: 'var(--nxb-text-secondary)' }}>
+          <span className="body" style={{ color: 'var(--nxb-text-secondary)', flex: 1, minWidth: 200 }}>
             Blind Read is on — authors, reads and fork counts are hidden. Every story opens with its
             first line instead.
           </span>
-          <span
-            style={{
-              marginLeft: 'auto',
-              fontFamily: 'var(--font-mono)',
-              fontSize: 10,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              color: 'var(--nxb-text-muted)',
-              border: '0.5px solid var(--nxb-border-medium)',
-              borderRadius: 4,
-              padding: '2px 6px',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            BLIND · ON
-          </span>
+          <span className="fi-tag fi-tag--outline fi-blind-note__badge">BLIND · ON</span>
         </div>
       )}
 
       {/* Continue reading — only when the reader has a saved position */}
       {progress && (
-        <div
-          className="fi-row-hover"
-          onClick={() => openStory(progress.storyId)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 16,
-            padding: '16px 20px',
-            borderRadius: 16,
-            background: 'var(--fi-card)',
-            border: '0.5px solid var(--nxb-border-low)',
-            marginTop: 20,
-            cursor: 'pointer',
-          }}
-        >
+        <div className="fi-continue fi-row-hover" onClick={() => openStory(progress.storyId)}>
           <IconBook size={20} style={{ color: 'var(--nxb-text-muted)', flex: 'none' }} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+          <div className="fi-stack fi-stack--6" style={{ flex: 1, minWidth: 0 }}>
+            <div className="fi-continue__meta">
               <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
                 {progress.title}
               </span>
@@ -208,26 +86,8 @@ export default function Discover({
                 {progress.chapterLabel} · {Math.round(progress.percent)}% read
               </span>
             </div>
-            <div
-              style={{
-                height: 4,
-                borderRadius: 9999,
-                background: 'var(--nxb-overlay-medium)',
-                position: 'relative',
-                maxWidth: 320,
-              }}
-            >
-              <span
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  width: `${progress.percent}%`,
-                  borderRadius: 9999,
-                  background: 'var(--nxb-text-primary)',
-                }}
-              />
+            <div className="fi-progress">
+              <span className="fi-progress__fill" style={{ width: `${progress.percent}%` }} />
             </div>
           </div>
           <button
@@ -244,79 +104,27 @@ export default function Discover({
       )}
 
       {/* Genre filters */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '20px 0 24px', flexWrap: 'wrap' }}>
+      <div className="fi-filters">
         {genreOptions.map((g) => (
-          <button
-            key={g}
-            className={pill(genreFilter === g)}
-            onClick={() => setGenreFilter(g)}
-            style={{ gap: 6 }}
-          >
-            {g !== 'All' && (
-              <span
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 9999,
-                  background: genreColor(g),
-                  flex: 'none',
-                }}
-              />
-            )}
+          <button key={g} className={pill(genreFilter === g)} onClick={() => setGenreFilter(g)}>
+            {g !== 'All' && <span className="fi-genre-dot" style={{ background: genreColor(g) }} />}
             {g}
           </button>
         ))}
       </div>
 
       {/* Feed */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: 16,
-        }}
-      >
+      <div className="fi-grid--feed">
         {feed.map((st) => (
           <article
             key={st.id}
             data-lift
+            className="fi-story-card"
             onClick={() => openStory(st.id)}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-              padding: 20,
-              borderRadius: 16,
-              background: st.cardBg,
-              border: `0.5px solid ${st.cardBorder}`,
-              cursor: 'pointer',
-            }}
+            style={{ background: st.cardBg, borderColor: st.cardBorder }}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                margin: '-20px -20px 4px',
-                padding: '14px 20px 12px',
-                borderRadius: '16px 16px 0 0',
-                background: st.washBg,
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  letterSpacing: '0.4px',
-                  textTransform: 'uppercase',
-                  color: st.tagColor,
-                  background: st.tagBg,
-                  borderRadius: 4,
-                  padding: '3px 7px',
-                  whiteSpace: 'nowrap',
-                  flex: 'none',
-                }}
-              >
+            <div className="fi-story-card__wash" style={{ background: st.washBg }}>
+              <span className="fi-tag" style={{ color: st.tagColor, background: st.tagBg }}>
                 {st.genre}
               </span>
               <span
@@ -339,42 +147,17 @@ export default function Discover({
                 </span>
               )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <h2 className="h2" style={{ margin: 0, textWrap: 'balance', color: st.titleColor }}>
+            <div className="fi-stack fi-stack--6">
+              <h2 className="h2" style={{ color: st.titleColor }}>
                 {st.title}
               </h2>
-              <p className="body" style={{ margin: 0, color: st.bodyColor }}>
+              <p className="body fi-story-card__blurb" style={{ color: st.bodyColor }}>
                 {st.blurb}
               </p>
             </div>
             {!st.blind && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  marginTop: 'auto',
-                  paddingTop: 12,
-                  borderTop: '0.5px solid var(--nxb-border-low)',
-                }}
-              >
-                <span
-                  style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 9999,
-                    background: 'var(--nxb-neutral-purple-150)',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 10,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--nxb-text-primary)',
-                    flex: 'none',
-                  }}
-                >
-                  {st.initials}
-                </span>
+              <div className="fi-story-card__footer">
+                <span className="fi-avatar fi-avatar--sm">{st.initials}</span>
                 <span className="body-s" style={{ color: 'var(--nxb-text-primary)' }}>
                   {st.author}
                 </span>
@@ -385,14 +168,8 @@ export default function Discover({
             )}
             {st.blind && (
               <div
-                style={{
-                  marginTop: 'auto',
-                  paddingTop: 12,
-                  borderTop: '0.5px solid rgba(255, 255, 255, 0.10)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 4,
-                }}
+                className="fi-story-card__footer fi-stack fi-stack--4"
+                style={{ borderTopColor: 'rgba(255, 255, 255, 0.10)', alignItems: 'flex-start', flexDirection: 'column' }}
               >
                 <span className="label" style={{ color: '#afafaf' }}>
                   first line

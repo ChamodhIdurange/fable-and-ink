@@ -25,4 +25,8 @@ export const config = {
   mongoUri: process.env.MONGO_URI, // undefined => use in-memory MongoDB
   seedOnBoot: (process.env.SEED_ON_BOOT ?? 'true') !== 'false',
   demoPassword: process.env.DEMO_PASSWORD ?? 'password',
+  // Google AI (Gemini). When the key is unset, AI features fall back to the
+  // built-in stubs so local dev still works with zero setup.
+  geminiApiKey: process.env.GEMINI_API_KEY,
+  geminiModel: process.env.GEMINI_MODEL ?? 'gemini-flash-latest',
 }

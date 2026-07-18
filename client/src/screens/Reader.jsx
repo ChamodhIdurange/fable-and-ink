@@ -45,7 +45,7 @@ export default function Reader({
 }) {
   if (!story) {
     return (
-      <main style={{ flex: 1, display: 'grid', placeItems: 'center', padding: 48 }}>
+      <main className="fi-loading">
         <span className="meta">Loading story…</span>
       </main>
     )
@@ -62,31 +62,18 @@ export default function Reader({
 
   return (
     <>
-      <main
-        data-screen-label="Reader"
-        style={{ width: '100%', maxWidth: 720, margin: '0 auto', padding: '24px 24px 120px', flex: 1 }}
-      >
-        <button className="nxb-pill" onClick={() => go('discover')} style={{ marginBottom: 24 }}>
+      <main data-screen-label="Reader" className="fi-page fi-page--reader">
+        <button className="nxb-pill fi-back-pill" onClick={() => go('discover')}>
           <IconChevronLeft size={16} />
           Discover
         </button>
 
         {/* Title block */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="fi-reader-title">
+          <div className="fi-row fi-row--8">
             <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.4px',
-                textTransform: 'uppercase',
-                color: c,
-                background: `color-mix(in srgb, ${c} 10%, transparent)`,
-                borderRadius: 4,
-                padding: '3px 7px',
-                whiteSpace: 'nowrap',
-                flex: 'none',
-              }}
+              className="fi-tag"
+              style={{ color: c, background: `color-mix(in srgb, ${c} 10%, transparent)` }}
             >
               {story.genre}
             </span>
@@ -94,26 +81,10 @@ export default function Reader({
               {story.readTime} min · {chapterCount} chapters
             </span>
           </div>
-          <h1 className="h1" style={{ margin: 0, fontSize: 32, letterSpacing: '-0.7px', textWrap: 'balance' }}>
-            {story.title}
-          </h1>
+          <h1 className="h1">{story.title}</h1>
           {!story.blind && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span
-                style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: 9999,
-                  background: 'var(--nxb-neutral-purple-150)',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 10,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {story.initials}
-              </span>
+            <div className="fi-row fi-row--8">
+              <span className="fi-avatar fi-avatar--sm">{story.initials}</span>
               <span className="body-s">{story.author}</span>
               <span className="meta">· {fmtReads(story.readCount)} reads</span>
             </div>
@@ -126,18 +97,7 @@ export default function Reader({
         </div>
 
         {/* Toolbar */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            flexWrap: 'wrap',
-            padding: '16px 0',
-            borderTop: '0.5px solid var(--nxb-border-low)',
-            borderBottom: '0.5px solid var(--nxb-border-low)',
-            marginBottom: 32,
-          }}
-        >
+        <div className="fi-reader-toolbar">
           <button className="nxb-pill" onClick={toggleChapters}>
             <IconList size={16} />
             Chapters
@@ -153,7 +113,7 @@ export default function Reader({
           <button className={pill(treeOpen)} onClick={toggleTree}>
             {forkCount} forks
           </button>
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div className="fi-reader-toolbar__fonts">
             <button
               className="nxb-icon-btn nxb-icon-btn--xs"
               onClick={fontDown}
@@ -175,38 +135,14 @@ export default function Reader({
 
         {/* Chapters panel */}
         {chaptersOpen && (
-          <div
-            style={{
-              border: '0.5px solid var(--nxb-border-low)',
-              borderRadius: 16,
-              background: 'var(--fi-card)',
-              padding: 8,
-              marginBottom: 32,
-              animation: 'fablefade 200ms ease-out',
-            }}
-          >
+          <div className="fi-panel fi-chapters-panel">
             {chapters.map((cc, i) => (
               <button
                 key={i}
-                className="fi-soft-hover"
+                className={`fi-chapter-row fi-soft-hover${i === idx ? ' is-current' : ''}`}
                 onClick={() => setChapter(i, { fromList: true })}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 12,
-                  width: '100%',
-                  padding: 12,
-                  border: 0,
-                  borderRadius: 8,
-                  background: i === idx ? 'var(--nxb-surface-3)' : 'transparent',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  fontFamily: 'var(--font-sans)',
-                }}
               >
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--nxb-text-muted)', width: 24 }}>
-                  {'0' + (i + 1)}
-                </span>
+                <span className="fi-chapter-row__num">{'0' + (i + 1)}</span>
                 <span className="body" style={{ color: 'var(--nxb-text-primary)', flex: 1 }}>
                   {cc.title}
                 </span>
@@ -218,50 +154,17 @@ export default function Reader({
 
         {/* Remix tree */}
         {treeOpen && (
-          <div
-            style={{
-              border: '0.5px solid var(--nxb-border-low)',
-              borderRadius: 16,
-              background: 'var(--fi-card)',
-              padding: 20,
-              marginBottom: 32,
-              animation: 'fablefade 200ms ease-out',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+          <div className="fi-panel fi-tree-panel">
+            <div className="fi-tree__head">
               <IconGitFork size={16} style={{ color: 'var(--nxb-text-muted)' }} />
               <span className="h3" style={{ margin: 0 }}>
                 Remix tree
               </span>
               <span className="meta">· forks keep a permanent link to the original</span>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '10px 12px',
-                  borderRadius: 8,
-                  background: 'var(--nxb-neutral-purple-150)',
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 10,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    color: 'var(--nxb-text-muted)',
-                    border: '0.5px solid var(--nxb-border-medium)',
-                    borderRadius: 4,
-                    padding: '2px 6px',
-                    whiteSpace: 'nowrap',
-                    flex: 'none',
-                  }}
-                >
-                  ORIGINAL
-                </span>
+            <div className="fi-stack">
+              <div className="fi-tree__root">
+                <span className="fi-tag fi-tag--outline">ORIGINAL</span>
                 <span className="body" style={{ color: 'var(--nxb-text-primary)' }}>
                   {tree?.original?.title ?? story.title}
                 </span>
@@ -269,50 +172,11 @@ export default function Reader({
                   {tree?.original?.by ?? ''}
                 </span>
               </div>
-              <div
-                style={{
-                  marginLeft: 16,
-                  borderLeft: '1px solid var(--nxb-border-medium)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
+              <div className="fi-tree__branches">
                 {(tree?.forks ?? []).map((f) => (
-                  <div
-                    key={f.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      padding: '10px 12px 10px 16px',
-                      position: 'relative',
-                    }}
-                  >
-                    <span
-                      style={{
-                        position: 'absolute',
-                        left: 0,
-                        top: '50%',
-                        width: 12,
-                        height: 1,
-                        background: 'var(--nxb-border-medium)',
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: 10,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        color: 'var(--nxb-text-muted)',
-                        border: '0.5px solid var(--nxb-border-medium)',
-                        borderRadius: 4,
-                        padding: '2px 6px',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {f.kind}
-                    </span>
+                  <div key={f.id} className="fi-tree__fork">
+                    <span className="fi-tree__tick" />
+                    <span className="fi-tag fi-tag--outline">{f.kind}</span>
                     <span className="body" style={{ color: 'var(--nxb-text-primary)' }}>
                       {f.title}
                     </span>
@@ -327,68 +191,23 @@ export default function Reader({
         )}
 
         {/* Chapter heading */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontWeight: 200,
-              fontSize: 56,
-              lineHeight: 1,
-              letterSpacing: '-1px',
-              color: 'var(--nxb-text-disabled)',
-            }}
-          >
-            0{idx + 1}
-          </span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <div className="fi-chapter-head">
+          <span className="fi-chapter-head__num">0{idx + 1}</span>
+          <div className="fi-stack fi-stack--2">
             <span className="label">chapter</span>
-            <h2
-              style={{
-                margin: 0,
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 500,
-                fontSize: 22,
-                letterSpacing: '-0.5px',
-                color: 'var(--nxb-text-primary)',
-              }}
-            >
-              {ch.title}
-            </h2>
+            <h2 className="fi-chapter-head__title">{ch.title}</h2>
           </div>
         </div>
 
         {/* Body */}
-        <div
-          style={{
-            fontSize: `${readerFs}px`,
-            lineHeight: 1.75,
-            letterSpacing: '-0.2px',
-            color: 'var(--nxb-text-secondary)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 20,
-            maxWidth: '62ch',
-          }}
-        >
+        <div className="fi-prose" style={{ fontSize: `${readerFs}px` }}>
           {ch.paras.map((t, i) => (
-            <p key={i} style={{ margin: 0, textWrap: 'pretty' }}>
-              {t}
-            </p>
+            <p key={i}>{t}</p>
           ))}
         </div>
 
         {/* Prev / next */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-            marginTop: 48,
-            paddingTop: 24,
-            borderTop: '0.5px solid var(--nxb-border-low)',
-          }}
-        >
+        <div className="fi-pager">
           <button
             className="nxb-btn nxb-btn--secondary nxb-btn--sm"
             onClick={() => setChapter(Math.max(0, idx - 1))}
@@ -397,7 +216,7 @@ export default function Reader({
             <IconChevronLeft size={16} />
             Previous
           </button>
-          <span className="meta">
+          <span className="meta fi-pager__label">
             Chapter {idx + 1} of {chapterCount}
           </span>
           <button
@@ -413,95 +232,24 @@ export default function Reader({
 
       {/* Floating Listen player */}
       {listenOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 16,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 'min(640px, calc(100vw - 32px))',
-            zIndex: 45,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            padding: '12px 16px',
-            borderRadius: 24,
-            background: 'var(--nxb-surface-4)',
-            border: '1px solid rgba(255, 255, 255, 0.10)',
-            backdropFilter: 'saturate(1.2) blur(12px)',
-            WebkitBackdropFilter: 'saturate(1.2) blur(12px)',
-            boxShadow: 'var(--nxb-glass-shadow)',
-            animation: 'fablefade 250ms ease-out',
-          }}
-        >
-          <button
-            className="fi-listen-play"
-            onClick={togglePlay}
-            aria-label="Play or pause narration"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 9999,
-              border: 0,
-              background: '#fafafa',
-              color: '#090909',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              flex: 'none',
-            }}
-          >
+        <div className="fi-player">
+          <button className="fi-player__play fi-listen-play" onClick={togglePlay} aria-label="Play or pause narration">
             {playing ? <IconPause size={16} /> : <IconPlay size={16} style={{ marginLeft: 2 }} />}
           </button>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-              <span
-                className="body-s"
-                style={{
-                  color: '#fafafa',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
+          <div className="fi-player__body">
+            <div className="fi-player__meta">
+              <span className="body-s fi-player__title">
                 Ch. {idx + 1} · {ch.title}
               </span>
-              <span
-                className="meta"
-                style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', color: '#afafaf' }}
-              >
+              <span className="meta fi-player__time">
                 {fmt(progress)} / {fmt(dur)}
               </span>
             </div>
-            <div
-              onClick={seek}
-              style={{
-                height: 4,
-                borderRadius: 9999,
-                background: 'rgba(255, 255, 255, 0.15)',
-                cursor: 'pointer',
-                position: 'relative',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  borderRadius: 9999,
-                  background: '#fafafa',
-                  width: progressPct,
-                }}
-              />
+            <div className="fi-player__track" onClick={seek}>
+              <div className="fi-player__fill" style={{ width: progressPct }} />
             </div>
           </div>
-          <button
-            className="nxb-pill"
-            onClick={cycleSpeed}
-            style={{ fontFamily: 'var(--font-mono)', flex: 'none', background: 'rgba(255, 255, 255, 0.10)', color: '#fafafa' }}
-          >
+          <button className="nxb-pill fi-player__speed" onClick={cycleSpeed}>
             {speeds[speedIdx]}&times;
           </button>
         </div>

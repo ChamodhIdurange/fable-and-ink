@@ -17,11 +17,8 @@ export default function Publish({
   doPublish,
 }) {
   return (
-    <main
-      data-screen-label="Publish"
-      style={{ width: '100%', maxWidth: 560, margin: '0 auto', padding: '32px 24px 64px', flex: 1 }}
-    >
-      <button className="nxb-pill" onClick={() => go('editor')} style={{ marginBottom: 24 }}>
+    <main data-screen-label="Publish" className="fi-page fi-page--narrow">
+      <button className="nxb-pill fi-back-pill" onClick={() => go('editor')}>
         <IconChevronLeft size={16} />
         Back to editor
       </button>
@@ -32,65 +29,23 @@ export default function Publish({
         Readers see the title, blurb and genre — discovery is quality-first from there.
       </p>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 20,
-          padding: 24,
-          borderRadius: 16,
-          background: 'var(--fi-card)',
-          border: '0.5px solid var(--nxb-border-low)',
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div className="fi-form-card">
+        <div className="fi-field">
           <label className="label" htmlFor="pub-title">
             title
           </label>
-          <input
-            id="pub-title"
-            value={pubTitle}
-            onChange={onPubTitle}
-            style={{
-              height: 44,
-              padding: '0 12px',
-              borderRadius: 8,
-              border: '1px solid var(--nxb-border-medium)',
-              background: 'var(--nxb-surface-1)',
-              fontFamily: 'var(--font-sans)',
-              fontSize: 14,
-              color: 'var(--nxb-text-primary)',
-              outline: 'none',
-            }}
-          />
+          <input id="pub-title" className="fi-input" value={pubTitle} onChange={onPubTitle} />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div className="fi-field">
           <label className="label" htmlFor="pub-blurb">
             blurb
           </label>
-          <textarea
-            id="pub-blurb"
-            value={pubBlurb}
-            onChange={onPubBlurb}
-            style={{
-              minHeight: 88,
-              padding: '10px 12px',
-              borderRadius: 8,
-              border: '1px solid var(--nxb-border-medium)',
-              background: 'var(--nxb-surface-1)',
-              fontFamily: 'var(--font-sans)',
-              fontSize: 14,
-              lineHeight: 1.5,
-              color: 'var(--nxb-text-primary)',
-              outline: 'none',
-              resize: 'vertical',
-            }}
-          />
+          <textarea id="pub-blurb" className="fi-textarea" value={pubBlurb} onChange={onPubBlurb} />
           <span className="meta">Tip: 1–2 sentences. Lead with the tension, not the setting.</span>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div className="fi-field" style={{ gap: 8 }}>
           <span className="label">genre · pick up to 2</span>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <div className="fi-pill-set">
             {pubGenreOptions.map((g) => (
               <button key={g} className={pill(pubGenresSel.includes(g))} onClick={() => toggleGenre(g)}>
                 {g}
@@ -98,45 +53,21 @@ export default function Publish({
             ))}
           </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div className="fi-field" style={{ gap: 8 }}>
           <span className="label">visibility</span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="fi-stack fi-stack--8">
             {visOptionDefs.map((v) => {
               const selected = visibility === v.id
               return (
                 <button
                   key={v.id}
-                  className="fi-opt-hover"
+                  className={`fi-opt fi-opt-hover${selected ? ' is-selected' : ''}`}
                   onClick={() => setVisibility(v.id)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 12,
-                    padding: '14px 16px',
-                    borderRadius: 8,
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    background: selected ? 'rgba(132, 39, 226, 0.05)' : 'var(--nxb-surface-1)',
-                    border: `1px solid ${selected ? 'var(--nxb-text-link)' : 'var(--nxb-border-medium)'}`,
-                  }}
+                  role="radio"
+                  aria-checked={selected}
                 >
-                  <span
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: 9999,
-                      border: '1.5px solid var(--nxb-border-strong)',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flex: 'none',
-                    }}
-                  >
-                    {selected && (
-                      <span style={{ width: 8, height: 8, borderRadius: 9999, background: 'var(--nxb-text-link)' }} />
-                    )}
-                  </span>
-                  <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <span className="fi-opt__radio">{selected && <span className="fi-opt__dot" />}</span>
+                  <span className="fi-opt__text">
                     <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
                       {v.title}
                     </span>
@@ -149,16 +80,7 @@ export default function Publish({
             })}
           </div>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: 12,
-            paddingTop: 8,
-            borderTop: '0.5px solid var(--nxb-border-low)',
-          }}
-        >
+        <div className="fi-form-actions">
           <button className="nxb-btn nxb-btn--secondary nxb-btn--sm" onClick={saveDraft}>
             Save draft
           </button>

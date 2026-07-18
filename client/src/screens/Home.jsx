@@ -3,75 +3,29 @@ import { IconEyeOff, IconAudioLines, IconSparkles, IconActivity, IconGitFork } f
 
 export default function Home({ go, tryBlind, openStory, pickCategory, samples = [] }) {
   return (
-    <main data-screen-label="Home" style={{ width: '100%', flex: 1 }}>
+    <main data-screen-label="Home" className="fi-page fi-page--full">
       {/* Hero */}
-      <section style={{ background: 'var(--nxb-surface-4)', padding: '88px 24px 96px' }}>
-        <div
-          style={{
-            maxWidth: 1080,
-            margin: '0 auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 24,
-            alignItems: 'flex-start',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              letterSpacing: '0.5px',
-              textTransform: 'uppercase',
-              color: '#afafaf',
-            }}
-          >
-            A home for storytellers
-          </span>
-          <h1
-            style={{
-              margin: 0,
-              fontFamily: 'var(--font-sans)',
-              fontWeight: 500,
-              fontSize: 64,
-              lineHeight: 1.08,
-              letterSpacing: '-1.5px',
-              color: '#fafafa',
-              textWrap: 'balance',
-            }}
-          >
+      <section className="fi-hero">
+        <span className="fi-hero__glow fi-hero__glow--read" aria-hidden="true" />
+        <span className="fi-hero__glow fi-hero__glow--write" aria-hidden="true" />
+        <span className="fi-hero__glow fi-hero__glow--fork" aria-hidden="true" />
+        <div className="fi-hero__inner">
+          <span className="fi-kicker">A home for storytellers</span>
+          <h1 className="fi-hero__title">
             <span style={{ color: '#4eb86a' }}>Read it.</span>{' '}
             <span style={{ color: '#a867ee' }}>Write it.</span>{' '}
             <span style={{ color: '#d44f78' }}>Fork it.</span>
           </h1>
-          <p
-            style={{
-              margin: 0,
-              fontFamily: 'var(--font-sans)',
-              fontSize: 18,
-              lineHeight: 1.5,
-              letterSpacing: '-0.25px',
-              color: '#c7c7c7',
-              maxWidth: '54ch',
-            }}
-          >
+          <p className="fi-hero__lede">
             Fable&amp;Ink is where stories get read for how they&rsquo;re written — not who wrote
             them. Listen with adaptive narration, polish without losing your voice, and remix any
             story that moves you.
           </p>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
+          <div className="fi-hero__actions">
             <button className="nxb-btn nxb-btn--primary nxb-btn--md" onClick={() => go('discover')}>
               Explore Discover
             </button>
-            <button
-              className="nxb-btn nxb-btn--sm"
-              onClick={() => go('editor')}
-              style={{
-                height: 48,
-                background: 'rgba(255, 255, 255, 0.10)',
-                borderColor: 'rgba(255, 255, 255, 0.20)',
-                color: '#fafafa',
-              }}
-            >
+            <button className="nxb-btn nxb-btn--sm fi-btn-ghost-dark" onClick={() => go('editor')}>
               Start Writing
             </button>
           </div>
@@ -79,23 +33,11 @@ export default function Home({ go, tryBlind, openStory, pickCategory, samples = 
       </section>
 
       {/* Blind Read banner */}
-      <section style={{ maxWidth: 1080, margin: '-48px auto 0', padding: '0 24px' }}>
-        <div
-          style={{
-            borderRadius: 24,
-            background: 'var(--nxb-neutral-purple-150)',
-            padding: '32px 40px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 24,
-            flexWrap: 'wrap',
-          }}
-        >
+      <section className="fi-blind-banner-wrap">
+        <div className="fi-blind-banner">
           <IconEyeOff size={32} style={{ color: 'var(--nxb-text-link)', flex: 'none' }} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1, minWidth: 260 }}>
-            <h2 className="h2" style={{ margin: 0 }}>
-              Blind Read — our answer to follower-count fiction
-            </h2>
+          <div className="fi-blind-banner__copy">
+            <h2 className="h2">Blind Read — our answer to follower-count fiction</h2>
             <p className="body" style={{ margin: 0, color: 'var(--nxb-text-secondary)' }}>
               Flip one switch and every author name, read count and fork count disappears. Stories
               stand on their first line alone.
@@ -108,15 +50,9 @@ export default function Home({ go, tryBlind, openStory, pickCategory, samples = 
       </section>
 
       {/* Feature grid */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '48px 24px 16px' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
-            gap: 16,
-          }}
-        >
-          <FeatureCard tint="#3b82d4" iconColor="#3b82d4" title="Listen to any chapter" body="AI narration that reads the room — pace tightens in the tense scenes, breathes in the calm ones.">
+      <section className="fi-home-section fi-home-section--first" style={{ paddingBottom: 16 }}>
+        <div className="fi-grid fi-grid--features">
+          <FeatureCard tint="#3b82d4" title="Listen to any chapter" body="AI narration that reads the room — pace tightens in the tense scenes, breathes in the calm ones.">
             <IconAudioLines size={24} style={{ color: '#3b82d4' }} />
           </FeatureCard>
           <FeatureCard tint="#4eb86a" title="Beautify, not rewrite" body="Grammar and rhythm polish that keeps your voice. Every change is a suggestion you accept or skip.">
@@ -132,49 +68,23 @@ export default function Home({ go, tryBlind, openStory, pickCategory, samples = 
       </section>
 
       {/* Browse by category */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '40px 24px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 16 }}>
-          <h2 className="h1" style={{ margin: 0, fontSize: 24 }}>
-            Browse by category
-          </h2>
+      <section className="fi-home-section" style={{ paddingBottom: 16 }}>
+        <div className="fi-section-head">
+          <h2 className="h1">Browse by category</h2>
           <span className="meta">every genre, one shelf</span>
         </div>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-            gap: 12,
-          }}
-        >
+        <div className="fi-grid fi-grid--cats">
           {pubGenreOptions.map((g) => {
             const c = genreColor(g)
             return (
               <button
                 key={g}
                 data-lift
+                className="fi-cat-card"
                 onClick={() => pickCategory(g)}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  gap: 4,
-                  padding: 20,
-                  borderRadius: 16,
-                  border: 0,
-                  cursor: 'pointer',
-                  background: `color-mix(in srgb, ${c} 16%, transparent)`,
-                  textAlign: 'left',
-                }}
+                style={{ background: `color-mix(in srgb, ${c} 16%, transparent)` }}
               >
-                <span
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: 16,
-                    fontWeight: 500,
-                    letterSpacing: '-0.25px',
-                    color: c,
-                  }}
-                >
+                <span className="fi-cat-card__name" style={{ color: c }}>
                   {g}
                 </span>
                 <span className="meta">{genreCounts[g] || '1k'} stories</span>
@@ -185,102 +95,36 @@ export default function Home({ go, tryBlind, openStory, pickCategory, samples = 
       </section>
 
       {/* Fresh off the press */}
-      <section style={{ maxWidth: 1080, margin: '0 auto', padding: '40px 24px 56px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 16 }}>
-          <h2 className="h1" style={{ margin: 0, fontSize: 24 }}>
-            Fresh off the press
-          </h2>
+      <section className="fi-home-section fi-home-section--last">
+        <div className="fi-section-head">
+          <h2 className="h1">Fresh off the press</h2>
           <button className="nxb-pill" onClick={() => go('discover')} style={{ marginLeft: 'auto' }}>
             Discover more
           </button>
         </div>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-            gap: 16,
-          }}
-        >
-          {samples.slice(0, 3).map((hs) => {
+        <div className="fi-grid fi-grid--stories">
+          {samples.slice(0, 6).map((hs) => {
             const c = hs.genreColor || genreColor(hs.genre)
             return (
-              <article
-                key={hs.id}
-                data-lift
-                onClick={() => openStory(hs.id)}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 12,
-                  padding: 20,
-                  borderRadius: 16,
-                  background: 'var(--fi-card)',
-                  border: '0.5px solid var(--nxb-border-low)',
-                  cursor: 'pointer',
-                }}
-              >
+              <article key={hs.id} data-lift className="fi-story-card" onClick={() => openStory(hs.id)}>
                 <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    margin: '-20px -20px 4px',
-                    padding: '14px 20px 12px',
-                    borderRadius: '16px 16px 0 0',
-                    background: `color-mix(in srgb, ${c} 14%, transparent)`,
-                  }}
+                  className="fi-story-card__wash"
+                  style={{ background: `color-mix(in srgb, ${c} 14%, transparent)` }}
                 >
                   <span
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 11,
-                      letterSpacing: '0.4px',
-                      textTransform: 'uppercase',
-                      color: c,
-                      background: `color-mix(in srgb, ${c} 10%, transparent)`,
-                      borderRadius: 4,
-                      padding: '3px 7px',
-                      whiteSpace: 'nowrap',
-                      flex: 'none',
-                    }}
+                    className="fi-tag"
+                    style={{ color: c, background: `color-mix(in srgb, ${c} 10%, transparent)` }}
                   >
                     {hs.genre}
                   </span>
                   <span className="meta">{hs.readTime} min</span>
                 </div>
-                <h3 className="h2" style={{ margin: 0, textWrap: 'balance' }}>
-                  {hs.title}
-                </h3>
-                <p className="body" style={{ margin: 0, color: 'var(--nxb-text-secondary)' }}>
+                <h3 className="h2">{hs.title}</h3>
+                <p className="body fi-story-card__blurb" style={{ color: 'var(--nxb-text-secondary)' }}>
                   {hs.blurb}
                 </p>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    marginTop: 'auto',
-                    paddingTop: 12,
-                    borderTop: '0.5px solid var(--nxb-border-low)',
-                  }}
-                >
-                  <span
-                    style={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: 9999,
-                      background: 'var(--nxb-neutral-purple-150)',
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 10,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'var(--nxb-text-primary)',
-                      flex: 'none',
-                    }}
-                  >
-                    {hs.initials}
-                  </span>
+                <div className="fi-story-card__footer">
+                  <span className="fi-avatar fi-avatar--sm">{hs.initials}</span>
                   <span className="body-s" style={{ color: 'var(--nxb-text-primary)' }}>
                     {hs.author}
                   </span>
@@ -295,43 +139,11 @@ export default function Home({ go, tryBlind, openStory, pickCategory, samples = 
       </section>
 
       {/* Merit CTA */}
-      <section style={{ background: 'var(--nxb-surface-4)', padding: '64px 24px' }}>
-        <div
-          style={{
-            maxWidth: 1080,
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 24,
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <h2
-              style={{
-                margin: 0,
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 500,
-                fontSize: 32,
-                letterSpacing: '-0.7px',
-                color: '#fafafa',
-                textWrap: 'balance',
-              }}
-            >
-              Your story, discovered on merit.
-            </h2>
-            <p
-              style={{
-                margin: 0,
-                fontFamily: 'var(--font-sans)',
-                fontSize: 14,
-                letterSpacing: '-0.25px',
-                color: '#afafaf',
-              }}
-            >
-              No follower counts. No algorithm games. Just the work.
-            </p>
+      <section className="fi-cta">
+        <div className="fi-cta__inner">
+          <div className="fi-stack fi-stack--8">
+            <h2 className="fi-cta__title">Your story, discovered on merit.</h2>
+            <p className="fi-cta__sub">No follower counts. No algorithm games. Just the work.</p>
           </div>
           <button
             className="nxb-btn nxb-btn--inverse nxb-btn--md"
@@ -348,21 +160,10 @@ export default function Home({ go, tryBlind, openStory, pickCategory, samples = 
 
 function FeatureCard({ tint, title, body, children }) {
   return (
-    <div
-      style={{
-        borderRadius: 16,
-        background: `color-mix(in srgb, ${tint} 12%, transparent)`,
-        padding: 24,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-      }}
-    >
+    <div className="fi-feature-card" style={{ background: `color-mix(in srgb, ${tint} 12%, transparent)` }}>
       {children}
-      <h3 className="h3" style={{ margin: 0 }}>
-        {title}
-      </h3>
-      <p className="body-s" style={{ margin: 0, color: 'var(--nxb-text-secondary)' }}>
+      <h3 className="h3">{title}</h3>
+      <p className="body-s" style={{ color: 'var(--nxb-text-secondary)' }}>
         {body}
       </p>
     </div>

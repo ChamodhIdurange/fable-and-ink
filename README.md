@@ -70,8 +70,10 @@ Highlights:
   CSS trick.
 - **Forks are first-class** — a fork is a story with a `parentStory` link; the
   remix tree and "forks of your work" are real queries over that graph.
-- **AI features are stubbed** but correctly shaped (`src/ai.ts`), ready to swap
-  in the Claude API for Beautify/Health and a TTS provider for narration.
+- **Beautify and Story Health call Google Gemini** (`src/ai.ts`) with strict
+  JSON schemas and server-side validation; set `GEMINI_API_KEY` in
+  `server/.env`. Without a key they fall back to built-in stubs, and narration
+  still awaits a TTS provider.
 
 Story content comes from the API; the frontend keeps only presentation
 constants (genre colors/labels) in [client/src/data.js](client/src/data.js).

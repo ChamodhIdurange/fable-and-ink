@@ -47,8 +47,8 @@ Session tokens are JWTs sent as `Authorization: Bearer <token>`.
 | GET | `/api/me/progress` | most recent reading position |
 | PUT | `/api/me/progress` | `{ storyId, chapterIndex, percent }` upsert |
 | GET | `/api/users/:id/profile` | public author profile |
-| POST | `/api/ai/beautify` | `{ text }` → voice-preserving suggestions *(stubbed)* |
-| POST | `/api/ai/health` | `{ storyId }` → Story Health notes *(stubbed)* |
+| POST | `/api/ai/beautify` | `{ text }` → voice-preserving suggestions *(Gemini)* |
+| POST | `/api/ai/health` | `{ storyId }` → Story Health notes *(Gemini)* |
 | POST | `/api/ai/narrate` | `{ storyId, chapterIndex }` → narration metadata *(stubbed)* |
 
 ## Data model
@@ -60,9 +60,24 @@ Session tokens are JWTs sent as `Authorization: Bearer <token>`.
   separate from published `chapters`.
 - **ReadingProgress** — per-user, per-story position.
 
-## AI (stubbed)
+## AI (Google Gemini)
 
-`src/ai.ts` returns realistic, correctly-shaped responses without external
-calls. Each function has a `TODO(real AI)` marker — Beautify and Health Check
-are drop-in targets for the Claude API (`claude-opus-4-8` / `claude-sonnet-5`),
-and narration for a TTS provider — with no client changes needed.
+`src/ai.ts` calls the Google AI (Gemini) API for **Beautify** and **Story
+Health**. Set `GEMINI_API_KEY` in `.env` (see `.env.example`); the model
+defaults to `gemini-flash-latest` and can be overridden with `GEMINI_MODEL`.
+
+Both features request a strict JSON response schema and validate everything
+server-side — Beautify suggestions are dropped unless `original` is an exact
+substring of the draft (the client applies them by exact replacement), and
+Health notes only keep scene links that match real scene slugs.
+
+**Model fallback:** if the configured model is exhausted (429 quota) or
+unavailable, the call falls through a chain of free models
+(`gemini-flash-lite-latest` → `gemini-2.0-flash` → `gemini-2.0-flash-lite`).
+When the whole chain is out, the API returns **503** with a friendly message
+and the editor shows an "at capacity — try again later" notice with a retry
+button. The built-in stub responses are used only when `GEMINI_API_KEY` is
+unset, so local dev still works with zero setup; responses carry
+`source: "gemini" | "stub"`.
+
+Narration is still stubbed — it would need a TTS provider.
