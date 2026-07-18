@@ -1,0 +1,12 @@
+/* ============================================================
+ * NxB Unify Design System — single entry point.
+ * Link THIS one file in a prototype and you get the full system:
+ *   1. the token contract + fonts (colors_and_type.css)
+ *   2. the reusable component layer (nxb-components.css), loaded AFTER
+ *      so its .nxb-* classes resolve against the tokens.
+ *   3. the full extracted component library (nxb-components-extracted.css) —
+ *      the other 25 approved components, normalised to the .nxb-* convention.
+ * ============================================================ */
+@import url("colors_and_type.css");
+@import url("nxb-components.css");
+@import url("nxb-components-extracted.css");

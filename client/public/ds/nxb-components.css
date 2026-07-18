@@ -1,0 +1,136 @@
+/* ============================================================
+ * nxb-components.css — NxB Unify reusable component layer
+ * Load AFTER colors_and_type.css. Class-based, token-driven, no build step.
+ * Prototypes use these classes + the markup in components-catalog.html so they
+ * START FROM the design-system components instead of regenerating new ones.
+ *
+ * Naming: .nxb-<component>, modifiers .nxb-<component>--<variant>,
+ *         parts .nxb-<component>__<part>. Figma names map 1:1.
+ *
+ * Phase 2 — batch 1: FEEDBACK (Banner · Toast · Alert).
+ * Buttons + the rest follow in later batches.
+ * ============================================================ */
+
+/* ---------------- Banner — Figma 5709:579 ---------------- */
+.nxb-banner {
+  display: flex; flex-direction: row; align-items: center; gap: 8px;
+  padding: 12px;
+  color: var(--nxb-text-inverse);
+}
+.nxb-banner--high   { background: var(--nxb-status-high-border); }
+.nxb-banner--medium { background: var(--nxb-status-medium-border); }
+html.dark .nxb-banner          { color: var(--nxb-text-primary); }
+html.dark .nxb-banner--medium  { color: var(--nxb-text-inverse); } /* AA on bright amber */
+.nxb-banner__message { display: flex; flex-direction: row; align-items: center; gap: 12px; flex: 1 1 auto; min-width: 0; }
+.nxb-banner__icon { flex: 0 0 auto; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+.nxb-banner__icon svg { width: 24px; height: 24px; }
+.nxb-banner__text { display: flex; flex-direction: column; padding: 2px 0; min-width: 0; }
+.nxb-banner__title { font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 24px; color: inherit; }
+.nxb-banner__body  { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: inherit; }
+.nxb-banner__action {
+  flex: 0 0 auto; align-self: center; padding: 0 8px; background: transparent; border: 0; cursor: pointer;
+  font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 16px;
+  color: inherit; text-decoration: underline; text-underline-offset: 2px; white-space: nowrap;
+}
+.nxb-banner__action:hover { opacity: 0.85; }
+
+/* ---------------- Toast — Figma 5709:930 ---------------- */
+.nxb-toast {
+  box-sizing: border-box; width: 358px; max-width: 100%; min-height: 48px;
+  display: flex; flex-direction: row; align-items: center; gap: 8px;
+  padding: 8px 8px 8px 12px; border-radius: 6px;
+  background: var(--nxb-surface-4);
+}
+.nxb-toast__msg { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: row; align-items: center; gap: 8px; }
+.nxb-toast__icon { flex: 0 0 auto; width: 24px; height: 24px; display: inline-flex; }
+.nxb-toast__icon svg { width: 24px; height: 24px; display: block; }
+.nxb-toast__icon--success { color: var(--nxb-status-low-border); }
+.nxb-toast__icon--error   { color: var(--nxb-status-high-border); }
+.nxb-toast__icon--info    { color: rgb(var(--nxb-status-ok)); }
+.nxb-toast__label { font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 24px; color: var(--nxb-text-on-emphasis); }
+.nxb-toast__close {
+  flex: 0 0 auto; width: 32px; height: 32px; border: 0; background: transparent; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--nxb-text-on-emphasis);
+  transition: background 120ms ease;
+}
+.nxb-toast__close:hover { background: rgba(255,255,255,0.08); }
+.nxb-toast__close svg { width: 16px; height: 16px; display: block; }
+
+/* ---------------- Alert (Confirmation Modal) — Figma 5709:533 ---------------- */
+.nxb-alert__backdrop { position: fixed; inset: 0; background: var(--nxb-backdrop); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
+.nxb-alert {
+  box-sizing: border-box; width: 90%; max-width: 340px;
+  background: var(--nxb-surface-2); border: 1px solid var(--nxb-border-medium); border-radius: 16px;
+  padding: 24px; display: flex; flex-direction: column;
+}
+.nxb-alert__title { margin: 0 0 8px; font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: var(--nxb-text-primary); }
+.nxb-alert__body  { margin: 0 0 20px; font-family: var(--font-sans); font-size: 14px; line-height: 1.5; color: var(--nxb-text-muted); }
+.nxb-alert__actions { display: flex; justify-content: flex-end; gap: 12px; }
+.nxb-alert__btn {
+  padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+}
+.nxb-alert__btn--secondary { border: 1px solid var(--nxb-border-medium); background: var(--nxb-action-secondary-bg); color: var(--nxb-text-primary); }
+.nxb-alert__btn--danger    { border: 1px solid var(--nxb-status-high-border); background: var(--nxb-status-high-bg); color: rgb(var(--nxb-status-high-text)); }
+
+/* ============================================================
+ * Phase 2 — batch 2: BUTTONS (Button · Icon Button · Pill Button)
+ * ============================================================ */
+
+/* ---------------- Button — Figma 5692:572 ---------------- */
+.nxb-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 9999px; border: 1px solid transparent;
+  font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 24px; letter-spacing: 0;
+  white-space: nowrap; cursor: pointer; transition: background-color 120ms, color 120ms;
+}
+.nxb-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.nxb-btn--md { height: 48px; padding: 0 16px; }
+.nxb-btn--sm { height: 40px; padding: 0 16px; }
+.nxb-btn--primary {
+  background: linear-gradient(to bottom, var(--nxb-action-primary-from), var(--nxb-action-primary-to));
+  border-color: var(--nxb-border-strong); color: var(--nxb-action-primary-text);
+}
+.nxb-btn--primary:hover { background: var(--nxb-action-primary-hover); }
+.nxb-btn--secondary { background: var(--nxb-action-secondary-bg); border-color: var(--nxb-border-medium); color: var(--nxb-text-primary); }
+.nxb-btn--secondary:hover { background: var(--nxb-action-secondary-hover); }
+.nxb-btn--inverse { background: var(--nxb-action-inverse-bg); border-color: var(--nxb-border-strong); color: var(--nxb-action-inverse-text); }
+.nxb-btn--inverse:hover { background: var(--nxb-action-inverse-hover); }
+.nxb-btn--tertiary { background: var(--nxb-action-tertiary-brand); border-color: var(--nxb-action-tertiary-brand-border); color: var(--nxb-text-primary); }
+.nxb-btn--tertiary:hover { background: var(--nxb-action-tertiary-brand-hover); }
+.nxb-btn--destructive { background: var(--nxb-status-high-bg); border-color: var(--nxb-status-high-border); color: rgb(var(--nxb-status-high-text)); }
+.nxb-btn--destructive:hover { background: var(--nxb-status-high-bg-hover); }
+.nxb-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------------- Icon Button — Figma 5692 (frosted) ---------------- */
+.nxb-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 9999px; border: 0;
+  background: var(--nxb-overlay-subtle); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  color: var(--nxb-text-primary); cursor: pointer; transition: background 120ms ease;
+}
+.nxb-icon-btn:hover { background: var(--nxb-overlay-light); }
+.nxb-icon-btn svg { width: 16px; height: 16px; display: block; }
+.nxb-icon-btn--xs { width: 32px; height: 32px; }
+/* Multi — one pill, 2–3 separately-tappable 40px segments */
+.nxb-icon-btn-group { display: inline-flex; align-items: center; height: 40px; border-radius: 9999px; background: var(--nxb-overlay-light); }
+.nxb-icon-btn-group__seg {
+  width: 40px; height: 40px; border: 0; padding: 0; background: transparent; border-radius: 9999px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--nxb-text-primary);
+  transition: background 120ms ease;
+}
+.nxb-icon-btn-group__seg:hover { background: var(--nxb-overlay-medium); }
+.nxb-icon-btn-group__seg:active { background: var(--nxb-overlay-heavy); }
+.nxb-icon-btn-group__seg svg { width: 16px; height: 16px; display: block; }
+
+/* ---------------- Pill Button — Figma 5522:818 ---------------- */
+.nxb-pill {
+  display: inline-flex; align-items: center; gap: 8px; height: 34px; box-sizing: border-box;
+  padding: 0 12px; border-radius: 9999px; border: 0; cursor: pointer; white-space: nowrap;
+  background: var(--nxb-overlay-light); color: var(--nxb-text-primary);
+  font-family: var(--font-sans); font-size: 12px; line-height: 18px; letter-spacing: -0.25px;
+  transition: background 120ms ease;
+}
+.nxb-pill:hover { background: var(--nxb-overlay-medium); }
+.nxb-pill svg { width: 16px; height: 16px; }
+.nxb-pill--selected { background: var(--nxb-surface-4); color: var(--nxb-text-on-emphasis); font-weight: 500; }

@@ -1,0 +1,63 @@
+/* Fable & Ink app-local styles.
+ * The NxB design-system tokens/components come from /ds/styles.css (linked in
+ * index.html). These are the small extras the design declared in its own
+ * <helmet> <style> block, ported verbatim. */
+
+@keyframes fablefade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:root {
+  --fi-card: #ffffff;
+  --fi-header-bg: rgba(250, 250, 250, 0.85);
+}
+
+html.dark {
+  --fi-card: #17181b;
+  --fi-header-bg: rgba(9, 9, 9, 0.85);
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* The design leans on :hover states declared inline via style-hover in the
+ * prototype runtime. In real React we express those as small utility classes. */
+[data-lift] {
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+[data-lift]:hover {
+  transform: translateY(-2px);
+}
+.fi-row-hover:hover {
+  background: var(--nxb-overlay-subtle);
+  border-color: var(--nxb-border-medium);
+}
+.fi-soft-hover:hover {
+  background: var(--nxb-overlay-light);
+}
+.fi-opt-hover:hover {
+  background: var(--nxb-overlay-subtle);
+}
+.fi-border-hover:hover {
+  border-color: var(--nxb-border-medium);
+}
+.fi-listen-play:hover {
+  background: #ffffff !important;
+}
+
+.fi-logo {
+  text-decoration: none;
+  white-space: nowrap;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}

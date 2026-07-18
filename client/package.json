@@ -1,0 +1,20 @@
+{
+  "name": "fable-and-ink",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Fable & Ink — a home for storytellers. Read it. Write it. Fork it.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}

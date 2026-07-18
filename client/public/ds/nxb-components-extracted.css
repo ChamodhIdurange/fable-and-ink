@@ -1,0 +1,1007 @@
+/* ============================================================
+ * nxb-components-extracted.css — NxB Unify component layer (the other 25)
+ * Normalised to the .nxb-* BEM convention:
+ *   block .nxb-<component> · variant --<x> · part __<part>.
+ * Figma names map 1:1 (cell, job-card, tag, heading-block, …).
+ * Load AFTER colors_and_type.css (via styles.css). Token-driven, no build.
+ * Note: a few *__stage / *__cap doc-demo helpers carried over from the
+ * source pages; they are inert and unused by the catalog.
+ * ============================================================ */
+
+
+/* ==================== Accordion  ·  components/collapsible-section.html ==================== */
+.nxb-accordion__card { border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); padding: 0 16px; }
+    .nxb-accordion__section { border-bottom: 1px solid var(--nxb-border-medium); }
+    .nxb-accordion__section:last-child { border-bottom: 0; }
+    .nxb-accordion__header {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0; background: transparent; border: 0; cursor: pointer; text-align: left;
+    }
+    .nxb-accordion__header-left { display: flex; align-items: center; gap: 12px; }
+    .nxb-accordion__title { font-family: var(--font-sans); font-size: 16px; font-weight: 500; color: var(--nxb-text-primary); }
+    .nxb-accordion__tag {
+      display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px;
+      font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: -0.13px; text-transform: uppercase;
+      background: var(--nxb-overlay-light); color: var(--nxb-text-muted); border: 0.5px solid var(--nxb-border-medium);
+    }
+    .nxb-accordion__chev { color: var(--nxb-text-disabled); width: 16px; height: 16px; transition: transform 200ms; }
+    .nxb-accordion__chev--open { transform: rotate(180deg); }
+    .nxb-accordion__body {
+      max-height: 5000px; overflow: hidden; opacity: 1; padding-bottom: 16px;
+      transition: max-height 200ms ease-in-out, opacity 200ms ease-in-out, padding-bottom 200ms;
+    }
+    .nxb-accordion__body--closed { max-height: 0; opacity: 0; padding-bottom: 0; }
+    .nxb-accordion__body p { margin: 0 0 8px; font-family: var(--font-sans); font-size: 14px; line-height: 20px; color: var(--nxb-text-secondary); }
+
+
+/* ==================== Anchors  ·  components/anchors.html ==================== */
+/* ── Stage ── */
+    .nxb-anchors__stage { padding: 32px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); display: flex; justify-content: center; }
+
+    /* ── Anchors frame — exact Figma 5549:261 reproduction ──
+       390 wide · 0.5px border all round · square corners · 16px padding · 8px gap · overflow-x clip */
+    .nxb-anchors__bar {
+      box-sizing: border-box;
+      width: 100%; max-width: 390px;
+      display: flex; flex-direction: row; align-items: center; gap: 8px;
+      padding: 16px;
+      border: 0.5px solid var(--nxb-border-medium);
+      background: transparent;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nxb-anchors__bar::-webkit-scrollbar { display: none; }
+
+    /* ── Anchor pill — StateDefault 5522:818 metrics: r999 · pad 8/12 · h34 · 12/18 ── */
+    .nxb-anchors__pill {
+      flex: 0 0 auto;
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 34px; box-sizing: border-box;
+      padding: 8px 12px;
+      border: 0; border-radius: 999px;
+      background: transparent;
+      font-family: var(--font-sans); font-size: 12px; line-height: 18px; font-weight: 400; letter-spacing: -0.25px;
+      color: var(--nxb-text-primary);
+      white-space: nowrap; cursor: pointer;
+      text-decoration: none;
+      transition: background 120ms ease;
+    }
+    .nxb-anchors__pill:hover { background: var(--nxb-overlay-subtle); }
+    .nxb-anchors__pill[aria-current="true"] { background: var(--nxb-overlay-light); font-weight: 500; }
+    .nxb-anchors__pill:focus-visible { outline: none; box-shadow: 0 0 0 3px transparent, 0 0 0 5px var(--nxb-border-focus-ring); }
+
+    /* ── States grid ── */
+    .nxb-anchors__states { padding: 28px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .nxb-anchors__state-row { display: flex; align-items: center; gap: 14px; }
+    .nxb-anchors__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); }
+
+    /* ── Scroll-spy demo ── */
+    .nxb-anchors__scroll-stage { border: 1px solid var(--nxb-border-low); border-radius: 12px; overflow: hidden; background: var(--nxb-surface-page); }
+    /* Rail sits on the page colour, with a hairline divider 16px below the pills */
+    .nxb-anchors__scroll-rail { position: sticky; top: 0; z-index: 2; display: flex; gap: 8px; padding: 16px; background: var(--nxb-surface-page); border-bottom: 0.5px solid var(--nxb-border-medium); overflow-x: auto; scrollbar-width: none; }
+    .nxb-anchors__scroll-rail::-webkit-scrollbar { display: none; }
+    /* 16px below the divider → content always sits 32px under the pills */
+    .nxb-anchors__scroll-body { height: 280px; overflow-y: auto; padding: 16px 16px 200px; background: var(--nxb-surface-page); scroll-behavior: smooth; }
+    .nxb-anchors__section { padding: 16px 0; scroll-margin-top: 16px; }
+    .nxb-anchors__section:first-child { padding-top: 0; }
+    .nxb-anchors__section + .nxb-anchors__section { border-top: 0.5px solid var(--nxb-border-medium); }
+    .nxb-anchors__section h4 { margin: 0 0 6px; font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: var(--nxb-text-primary); }
+    .nxb-anchors__section p { margin: 0; font-family: var(--font-sans); font-size: 14px; color: var(--nxb-text-muted); line-height: 1.55; max-width: 52ch; }
+
+
+/* ==================== Avatar  ·  components/avatar.html ==================== */
+/* ── Avatar — Figma 5692:539 ──
+       sizes: small 24 · medium 32 · large 40 · all rounded-full
+       initials: bg surface-3, mono, text #090909 (matches Cell) · image: object-cover */
+    .nxb-avatar {
+      position: relative; flex: 0 0 auto;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 9999px;
+      background: var(--nxb-surface-3);
+      color: var(--nxb-text-primary);
+      font-family: var(--font-mono); font-weight: 400; letter-spacing: 0;
+      user-select: none;
+    }
+    .nxb-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; }
+    .nxb-avatar--sm { width: 24px; height: 24px; font-size: 10px; } /* Mono/XS */
+    .nxb-avatar--md { width: 32px; height: 32px; font-size: 12px; } /* Mono/S */
+    .nxb-avatar--lg { width: 40px; height: 40px; font-size: 14px; } /* Mono/M */
+
+    /* Online badge — 8px, green, ringed in the surrounding surface */
+    .nxb-avatar__badge {
+      position: absolute; right: 0; bottom: 0;
+      width: 8px; height: 8px; border-radius: 9999px;
+      background: #16a34a;
+      box-shadow: 0 0 0 2px var(--nxb-surface-1);
+    }
+    .nxb-avatar--lg .nxb-avatar__badge { width: 10px; height: 10px; }
+
+    /* ── AvatarGroup — Figma 5692:565 ── overlap = size / 3, white ring, later sits on top */
+    .nxb-avatar__group { display: inline-flex; align-items: center; }
+    .nxb-avatar__group .nxb-avatar { box-shadow: 0 0 0 2px var(--nxb-surface-1); }
+    .nxb-avatar__group--sm > * + * { margin-left: -8px; }
+    .nxb-avatar__group--md > * + * { margin-left: -12px; }
+    .nxb-avatar__group--lg > * + * { margin-left: -16px; }
+    .nxb-avatar__group .nxb-avatar__more { background: var(--nxb-surface-3); color: var(--nxb-text-secondary); }
+
+    /* ── Demo stages ── */
+    .nxb-avatar__stage { padding: 32px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); display: flex; flex-wrap: wrap; align-items: center; gap: 40px; }
+    .nxb-avatar__spec { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .nxb-avatar__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); }
+
+    /* ── In context ── */
+    .nxb-avatar__ctx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 720px) { .nxb-avatar__ctx-grid { grid-template-columns: 1fr; } }
+    .nxb-avatar__card { border: 1px solid var(--nxb-border-low); border-radius: 16px; background: var(--nxb-surface-1); padding: 20px; }
+    .nxb-avatar__row { display: flex; align-items: flex-start; gap: 8px; }
+    .nxb-avatar__row + .nxb-avatar__row { margin-top: 14px; padding-top: 14px; border-top: 0.5px solid var(--nxb-border-medium); }
+    .nxb-avatar__cell-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .nxb-avatar__name { font-family: var(--font-sans); font-size: 14px; font-weight: 400; color: var(--nxb-text-primary); line-height: 24px; }
+    /* Cell secondary meta — Micro (10px / 500) muted, middot-separated */
+    .nxb-avatar__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-avatar__sub { font-family: var(--font-sans); font-size: 12px; color: var(--nxb-text-muted); line-height: 1.3; }
+    .nxb-avatar__card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+    .nxb-avatar__card-title { font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: var(--nxb-text-primary); }
+    .nxb-avatar__card-meta { font-family: var(--font-mono); font-size: 10px; color: var(--nxb-text-muted); margin-top: 2px; }
+
+
+/* ==================== Cell  ·  components/cell.html ==================== */
+.nxb-cell__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Cell — Figma 5693:677 ── 390w · 0.5px border · p 16/20 · row gap 16 */
+    .nxb-cell {
+      box-sizing: border-box; width: 100%; max-width: 390px;
+      display: flex; flex-direction: row; align-items: flex-start; gap: 16px;
+      padding: 16px 20px;
+      background: var(--nxb-surface-1);
+    }
+    .nxb-cell--bordered { box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); }
+
+    .nxb-cell__body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+    .nxb-cell__label { font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: var(--nxb-text-muted); }
+    .nxb-cell__textgroup { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .nxb-cell__text { font-family: var(--font-sans); font-size: 14px; font-weight: 400; line-height: 24px; color: var(--nxb-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .nxb-cell__sec { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-cell__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+
+    /* Outline tag (StateSecondary) — transparent, border-strong, mono 10 */
+    .nxb-cell__tag { display: inline-flex; align-items: center; height: 22px; padding: 4px 8px; border-radius: 4px; box-sizing: border-box; background: transparent; box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); font-family: var(--font-mono); font-size: 10px; line-height: 14px; color: var(--nxb-text-primary); align-self: flex-start; }
+
+    /* Number tile — SourceBadge language (surface-3, square, mono), unified to the avatar: 24px, Mono/XS */
+    .nxb-cell__num { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; box-sizing: border-box; background: var(--nxb-surface-3); font-family: var(--font-mono); font-size: 10px; font-weight: 400; line-height: 1; color: var(--nxb-text-primary); }
+
+    /* Avatar (initials) — like SourceBadge but fully rounded: 24px, surface-3, Mono/XS */
+    .nxb-cell__avatar { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; background: var(--nxb-surface-3); font-family: var(--font-mono); font-size: 10px; font-weight: 400; line-height: 1; color: var(--nxb-text-primary); }
+
+    .nxb-cell__trail { flex: 0 0 auto; align-self: center; color: var(--nxb-text-muted); }
+    .nxb-cell__trail svg { width: 16px; height: 16px; display: block; }
+
+    /* In-context list — cells share borders */
+    .nxb-cell__list { width: 100%; max-width: 390px; border: 0.5px solid var(--nxb-border-medium); border-radius: 12px; overflow: hidden; background: var(--nxb-surface-1); }
+    .nxb-cell__list .nxb-cell { width: 100%; }
+    .nxb-cell__list .nxb-cell + .nxb-cell { border-top: 0.5px solid var(--nxb-border-medium); }
+
+    .nxb-cell__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Document  ·  components/document.html ==================== */
+.nxb-document__stage { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Document (cell) — Figma 5693:779 ── 350w · h56 · r8 · surface-2 · 0.5px border-low · p8 */
+    .nxb-document {
+      box-sizing: border-box; width: 100%; max-width: 350px;
+      display: flex; flex-direction: row; align-items: center; gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      background: var(--nxb-surface-2);
+      box-shadow: inset 0 0 0 0.5px var(--nxb-border-low);
+    }
+    .nxb-document__icon { flex: 0 0 auto; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; color: var(--nxb-text-primary); }
+    .nxb-document__icon svg { width: 24px; height: 24px; }
+
+    .nxb-document__name { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .nxb-document__title { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .nxb-document__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+
+    .nxb-document__cta { flex: 0 0 auto; width: 32px; height: 32px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; color: var(--nxb-text-primary); background: transparent; border: 0; cursor: pointer; transition: background 120ms ease; }
+    .nxb-document__cta:hover { background: var(--nxb-overlay-light); }
+    .nxb-document__cta svg { width: 16px; height: 16px; }
+
+    .nxb-document__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Empty State  ·  components/empty-state.html ==================== */
+.nxb-empty-state__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Empty State — Figma 5700:297 ── 390w · left-aligned · p 16/20 · gap 16 (icon→content) */
+    .nxb-empty-state {
+      box-sizing: border-box; width: 100%; max-width: 390px;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 16px 20px;
+      align-items: flex-start;
+      background: var(--nxb-surface-1);
+      border-radius: 12px;
+    }
+    .nxb-empty-state__icon { flex: 0 0 auto; width: 24px; height: 24px; color: var(--nxb-text-primary); }
+    .nxb-empty-state__icon svg { width: 24px; height: 24px; display: block; }
+    .nxb-empty-state__content { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+    .nxb-empty-state__title { font-family: var(--font-sans); font-size: 20px; font-weight: 500; line-height: 28px; color: var(--nxb-text-primary); }
+    .nxb-empty-state__body  { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-primary); max-width: 350px; }
+    .nxb-empty-state__secondary { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-muted); }
+
+    .nxb-empty-state__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Filter  ·  components/filter.html ==================== */
+.nxb-filter__stage { display: flex; justify-content: center; padding: 32px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-3); }
+
+    /* ── Filter Modal — Figma 5697:1419 ── 374w mobile sheet · r32 · surface-2 */
+    .nxb-filter {
+      box-sizing: border-box; width: 100%; max-width: 374px;
+      border-radius: 32px; overflow: hidden;
+      background: var(--nxb-surface-2);
+      display: flex; flex-direction: column;
+    }
+    .nxb-filter__head { display: flex; align-items: center; justify-content: flex-end; padding: 12px 12px 0; }
+    .nxb-filter__close { width: 40px; height: 40px; border-radius: 999px; border: 0; background: var(--nxb-overlay-subtle); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--nxb-text-primary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .nxb-filter__close:hover { background: var(--nxb-overlay-light); }
+    .nxb-filter__close svg { width: 16px; height: 16px; }
+
+    .nxb-filter__title { margin: 4px 0 16px; padding: 0 20px; font-family: var(--font-sans); font-size: 20px; font-weight: 500; line-height: 28px; color: var(--nxb-text-primary); }
+
+    .nxb-filter__body { padding: 0 20px; }
+    .nxb-filter__section { padding: 16px 0; border-top: 0.5px solid var(--nxb-border-medium); }
+    .nxb-filter__section:last-child { border-bottom: 0.5px solid var(--nxb-border-medium); }
+    .nxb-filter__label { display: block; margin-bottom: 8px; font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: var(--nxb-text-muted); }
+    .nxb-filter__pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    /* Pill Button (StateDefault / StateSelected) — reused from Pill Button */
+    .nxb-filter__pill {
+      display: inline-flex; align-items: center; height: 34px; box-sizing: border-box;
+      padding: 8px 12px; border: 0; border-radius: 999px;
+      background: var(--nxb-overlay-light); color: var(--nxb-text-primary);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500; line-height: 18px;
+      cursor: pointer; white-space: nowrap; transition: background 120ms ease;
+    }
+    .nxb-filter__pill:hover { background: var(--nxb-overlay-medium); }
+    .nxb-filter__pill[aria-pressed="true"] { background: var(--nxb-surface-4); color: var(--nxb-text-on-emphasis); }
+
+    /* Footer */
+    .nxb-filter__footer { display: flex; align-items: center; gap: 16px; padding: 24px 20px; background: var(--nxb-surface-2); }
+    .nxb-filter__clear { display: inline-flex; align-items: center; justify-content: center; height: 40px; box-sizing: border-box; padding: 0 16px; border: 1px solid var(--nxb-status-high-border); border-radius: 999px; background: var(--nxb-status-high-bg); color: rgb(var(--nxb-status-high-text)); font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 24px; cursor: pointer; transition: background 120ms ease; }
+    .nxb-filter__clear:hover { background: var(--nxb-status-high-bg-hover); }
+
+
+/* ==================== Heading Block  ·  components/heading-block.html ==================== */
+.nxb-heading-block__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Heading Block — Figma 5693:818 ── 390w · left-aligned · p 16/20 · gap 16 */
+    .nxb-heading-block {
+      box-sizing: border-box; width: 100%; max-width: 390px;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 16px 20px;
+      align-items: flex-start;
+      background: var(--nxb-surface-1);
+      border-radius: 12px;
+    }
+    .nxb-heading-block__icon { flex: 0 0 auto; width: 24px; height: 24px; color: var(--nxb-text-primary); }
+    .nxb-heading-block__icon svg { width: 24px; height: 24px; display: block; }
+    .nxb-heading-block__content { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+    .nxb-heading-block__title { font-family: var(--font-sans); font-size: 20px; font-weight: 500; line-height: 28px; color: var(--nxb-text-primary); }
+    .nxb-heading-block__body  { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-primary); max-width: 350px; }
+    /* Metadata row — Body/S muted, middot-separated */
+    .nxb-heading-block__meta  { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-muted); }
+    /* Tags row — outline chips (StateSecondary): transparent, border-strong, mono 10 */
+    .nxb-heading-block__tags  { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+    .nxb-heading-block__tag   { display: inline-flex; align-items: center; height: 22px; padding: 4px 8px; border-radius: 4px; box-sizing: border-box; background: transparent; box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); font-family: var(--font-mono); font-size: 10px; line-height: 14px; color: var(--nxb-text-primary); }
+
+    .nxb-heading-block__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Job Card  ·  components/job-card.html ==================== */
+.nxb-job-card__stage { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; align-items: start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Job Card — Figma 5693:500 ── 350w · r16 · surface-1 · inset 0.5px border · p 16/20 */
+    .nxb-job-card {
+      box-sizing: border-box; width: 100%;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: var(--nxb-surface-1);
+      box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium);
+    }
+    .nxb-job-card__header { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; line-height: 14px; color: var(--nxb-text-primary); }
+    .nxb-job-card__header svg { width: 16px; height: 16px; flex: 0 0 auto; }
+    /* In-progress loader — Figma 8-blade spinner via mask so it inherits currentColor */
+    .nxb-job-card__loader { width: 16px; height: 16px; flex: 0 0 auto; fill: currentColor; }
+
+    .nxb-job-card__content { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .nxb-job-card__name { font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 24px; color: var(--nxb-text-primary); }
+    .nxb-job-card__addr { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-job-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+
+    .nxb-job-card__tags { display: flex; flex-direction: row; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .nxb-job-card__tag { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 4px 8px; border-radius: 4px; box-sizing: border-box; font-family: var(--font-mono); font-size: 10px; line-height: 14px; white-space: nowrap; }
+    .nxb-job-card__tag svg { width: 12px; height: 12px; flex: 0 0 auto; }
+    .nxb-job-card__tag--default { background: var(--nxb-overlay-light); box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); color: var(--nxb-text-primary); }
+    .nxb-job-card__tag--high { background: var(--nxb-status-high-bg); box-shadow: inset 0 0 0 0.5px var(--nxb-status-high-border); color: rgb(var(--nxb-status-high-text)); }
+    .nxb-job-card__tag--low { background: var(--nxb-status-low-bg); box-shadow: inset 0 0 0 0.5px var(--nxb-status-low-border); color: rgb(var(--nxb-status-low-text)); }
+    .nxb-job-card__tag--secondary { background: transparent; box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); color: var(--nxb-text-primary); }
+
+    /* In Progress — dark surface, light text */
+    .nxb-job-card--inprogress { background: var(--nxb-surface-4); box-shadow: none; }
+    .nxb-job-card--inprogress .nxb-job-card__name, .nxb-job-card--inprogress .nxb-job-card__header { color: var(--nxb-text-inverse); }
+    .nxb-job-card--inprogress .nxb-job-card__addr, .nxb-job-card--inprogress .nxb-job-card__meta, .nxb-job-card--inprogress .nxb-job-card__tag--secondary { color: var(--nxb-text-disabled); }
+    .nxb-job-card--inprogress .nxb-job-card__tag--secondary { box-shadow: inset 0 0 0 0.5px var(--nxb-text-disabled); }
+    @media (prefers-reduced-motion: no-preference) { .nxb-job-card__spin { animation: jc-spin 1.1s linear infinite; transform-origin: center; } }
+    @keyframes jc-spin { to { transform: rotate(360deg); } }
+
+    /* Emergency — red status tint + 0.5px status-high border */
+    .nxb-job-card--emergency { background: var(--nxb-status-high-bg); box-shadow: inset 0 0 0 0.5px var(--nxb-status-high-border); }
+
+    .nxb-job-card__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Menu  ·  components/sidebar.html ==================== */
+.nxb-menu__stage { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-3); }
+    .nxb-menu__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+    /* Logo — PP Supply Mono (brand display face) */
+    .nxb-menu__logo { font-family: var(--font-brand); font-size: 16px; font-weight: 500; letter-spacing: -0.04em; line-height: 1.3; }
+    .nxb-menu__logo b { color: var(--nxb-text-primary); font-weight: 500; }
+    .nxb-menu__logo span { color: var(--nxb-text-muted); }
+
+    /* ── Desktop Menu — Figma 5693:944 ── 224w · surface-2 · border-medium · p20/16 */
+    .nxb-menu__desktop { box-sizing: border-box; width: 224px; height: 460px; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 16px; background: var(--nxb-surface-2); box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); }
+    .nxb-menu__top { display: flex; flex-direction: column; gap: 20px; align-items: stretch; }
+    .nxb-menu__nav { display: flex; flex-direction: column; gap: 8px; }
+    .nxb-menu__item { display: flex; align-items: center; gap: 8px; height: 40px; box-sizing: border-box; padding: 0 16px; border-radius: 8px; font-family: var(--font-sans); font-size: 14px; line-height: 24px; color: var(--nxb-text-muted); cursor: pointer; }
+    .nxb-menu__item:hover { background: var(--nxb-overlay-light); }
+    .nxb-menu__item.active { background: var(--nxb-surface-3); color: var(--nxb-text-primary); }
+    .nxb-menu__ico { flex: 0 0 auto; width: 16px; height: 16px; color: var(--nxb-text-muted); }
+    .nxb-menu__ico svg { width: 16px; height: 16px; display: block; }
+    .nxb-menu__item.active .nxb-menu__ico { color: var(--nxb-text-primary); }
+    /* New Fault active — filled plus badge */
+    .nxb-menu__newfault.active .nxb-menu__ico { color: var(--nxb-text-primary); }
+    .nxb-menu__newfault.active .nxb-menu__ico .nxb-menu__fill { fill: var(--nxb-text-primary); }
+    .nxb-menu__newfault.active .nxb-menu__ico .nxb-menu__plus { stroke: var(--nxb-text-inverse); }
+
+    .nxb-menu__foot { display: flex; flex-direction: row; justify-content: space-around; align-items: center; padding-top: 16px; }
+    .nxb-menu__foot-btn { width: 16px; height: 16px; color: var(--nxb-text-muted); background: transparent; border: 0; cursor: pointer; }
+    .nxb-menu__foot-btn svg { width: 16px; height: 16px; display: block; }
+
+    /* ── Tablet Menu — Figma 5693:1009 ── 80w mini rail · stacked icon+label */
+    .nxb-menu__tablet { box-sizing: border-box; width: 80px; height: 460px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 8px; background: var(--nxb-surface-2); box-shadow: inset 0 0 0 0.5px var(--nxb-border-low); }
+    .nxb-menu__mini-logo { font-family: var(--font-mono); font-size: 16px; font-weight: 500; letter-spacing: -0.04em; color: var(--nxb-text-primary); }
+    .nxb-menu__mini-nav { display: flex; flex-direction: column; gap: 18px; align-items: center; width: 100%; }
+    .nxb-menu__mini-item { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 64px; padding: 8px 0; border-radius: 8px; cursor: pointer; color: var(--nxb-text-muted); }
+    .nxb-menu__mini-item.active { background: var(--nxb-surface-3); color: var(--nxb-text-primary); }
+    .nxb-menu__mini-item .nxb-menu__ico { color: inherit; }
+    .nxb-menu__mini-item.active .nxb-menu__newfault-fill { fill: var(--nxb-text-primary); }
+    .nxb-menu__mini-item.active .nxb-menu__newfault-plus { stroke: var(--nxb-text-inverse); }
+    .nxb-menu__mini-label { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .nxb-menu__mini-foot { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+
+    /* ── Mobile Menu — Figma 5693:1560 ── top bar + sheet over blurred backdrop */
+    .nxb-menu__mobile-wrap { position: relative; width: 360px; max-width: 100%; height: 520px; border-radius: 16px; overflow: hidden; background: var(--nxb-surface-page); }
+    .nxb-menu__mobile-backdrop { position: absolute; inset: 0; background: rgba(9,9,9,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .nxb-menu__mobile { position: absolute; left: 0; right: 0; top: 0; background: var(--nxb-surface-1); border-radius: 0 0 16px 16px; padding: 0 0 24px; }
+    .nxb-menu__mobile-bar { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 12px 12px 12px 16px; }
+    .nxb-menu__mobile-close { width: 40px; height: 40px; border-radius: 999px; border: 0; background: var(--nxb-overlay-subtle); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--nxb-text-primary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .nxb-menu__mobile-close:hover { background: var(--nxb-overlay-light); }
+    .nxb-menu__mobile-close svg { width: 20px; height: 20px; }
+    .nxb-menu__mobile-nav { display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 0; }
+    /* Secondary group — Feedback / Mode / profile / Sign out. Always 48px below the last capability. */
+    .nxb-menu__mobile-secondary { margin-top: 48px; display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+    .nxb-menu__mobile .nxb-menu__item { height: 56px; font-size: 16px; gap: 16px; }
+    .nxb-menu__mobile .nxb-menu__ico { width: 20px; height: 20px; }
+    .nxb-menu__mobile .nxb-menu__ico svg { width: 20px; height: 20px; }
+    .nxb-menu__profile { padding: 24px 16px 0 32px; }    .nxb-menu__profile-name { font-family: var(--font-sans); font-size: 16px; font-weight: 400; color: var(--nxb-text-disabled); }
+    .nxb-menu__profile-email { font-family: var(--font-sans); font-size: 12px; font-weight: 400; color: var(--nxb-text-disabled); }
+    .nxb-menu__signout { margin: 20px 16px 0 32px; font-family: var(--font-sans); font-size: 16px; font-weight: 400; color: rgb(var(--nxb-status-high-text)); background: transparent; border: 0; padding: 0; cursor: pointer; }
+
+
+/* ==================== Nav Bar  ·  components/navbar.html ==================== */
+.nxb-navbar__stage { display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+    .nxb-navbar__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+    /* ── Nav Bar — Figma 5693:1564 ── h64 · p12 · row space-between */
+    .nxb-navbar__bar {
+      box-sizing: border-box; width: 100%;
+      display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 12px;
+      height: 64px; padding: 12px;
+      background: var(--nxb-surface-1);
+      box-shadow: inset 0 -0.5px 0 0 var(--nxb-border-medium);
+    }
+    .nxb-navbar__left { display: flex; flex-direction: row; align-items: center; gap: 12px; min-width: 0; }
+    .nxb-navbar__right { display: flex; flex-direction: row; align-items: center; gap: 12px; flex: 0 0 auto; }
+    .nxb-navbar__title { font-family: var(--font-mono); font-size: 14px; line-height: 24px; color: var(--nxb-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Icon button — 40px overlay-light circle (Icon Button, sm) */
+    .nxb-navbar__ico { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 999px; border: 0; background: var(--nxb-overlay-subtle); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--nxb-text-primary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background 120ms ease; }
+    .nxb-navbar__ico:hover { background: var(--nxb-overlay-light); }
+    /* Multi icon button — one overlay-light pill, 40px tappable segments (Icon Button › multi) */
+    .nxb-navbar__iconbtns { flex: 0 0 auto; display: inline-flex; align-items: center; height: 40px; border-radius: 999px; background: var(--nxb-overlay-light); }
+    .nxb-navbar__iconbtns button { width: 40px; height: 40px; border: 0; padding: 0; background: transparent; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--nxb-text-primary); transition: background 120ms ease; }
+    .nxb-navbar__iconbtns button svg { width: 16px; height: 16px; }
+    .nxb-navbar__iconbtns button:hover { background: var(--nxb-overlay-medium); }
+    .nxb-navbar__iconbtns button:active { background: var(--nxb-overlay-heavy); }
+    .nxb-navbar__ico svg { width: 16px; height: 16px; display: block; }
+
+    /* Title-handoff demo */
+    .nxb-navbar__demo { border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); }
+    .nxb-navbar__demo .nxb-navbar__bar { box-shadow: inset 0 -0.5px 0 0 var(--nxb-border-medium); position: sticky; top: 0; z-index: 2; }
+    .nxb-navbar__demo-title { font-family: var(--font-mono); font-size: 14px; line-height: 24px; color: var(--nxb-text-primary); opacity: 0; transform: translateY(4px); transition: opacity 160ms ease, transform 160ms ease; }
+    .nxb-navbar__demo-title.is-shown { opacity: 1; transform: none; }
+    .nxb-navbar__demo-scroll { height: 300px; overflow-y: auto; background: var(--nxb-surface-page); }
+    .nxb-navbar__hb { display: flex; flex-direction: column; gap: 16px; padding: 16px 20px; }
+    .nxb-navbar__hb-icon { width: 24px; height: 24px; color: var(--nxb-text-primary); }
+    .nxb-navbar__hb-icon svg { width: 24px; height: 24px; }
+    .nxb-navbar__hb-title { font-family: var(--font-sans); font-size: 20px; font-weight: 500; line-height: 28px; color: var(--nxb-text-primary); }
+    .nxb-navbar__hb-body { font-family: var(--font-sans); font-size: 12px; line-height: 18px; color: var(--nxb-text-primary); max-width: 320px; }
+    .nxb-navbar__fill { padding: 0 20px 24px; font-family: var(--font-sans); font-size: 12px; line-height: 1.7; color: var(--nxb-text-muted); }
+
+
+/* ==================== Pagination Controller  ·  components/page-controller.html ==================== */
+.nxb-pagination__stage { display: flex; flex-direction: column; gap: 16px; padding: 28px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); }
+    .nxb-pagination__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+    /* ── Pagination Controller — Figma 5547:354 ── row space-between · 461 max · h32 */
+    .nxb-pagination__bar { box-sizing: border-box; width: 100%; max-width: 461px; display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; }
+    .nxb-pagination__edge { display: inline-flex; align-items: center; gap: 8px; height: 32px; box-sizing: border-box; padding: 8px; border: 0; border-radius: 4px; background: transparent; font-family: var(--font-sans); font-size: 14px; line-height: 24px; color: var(--nxb-text-muted); cursor: pointer; transition: background 120ms ease; }
+    .nxb-pagination__edge:hover:not(:disabled) { background: var(--nxb-overlay-light); }
+    .nxb-pagination__edge:disabled { color: var(--nxb-text-disabled); cursor: not-allowed; }
+    .nxb-pagination__edge svg { width: 16px; height: 16px; flex: 0 0 auto; }
+
+    .nxb-pagination__nums { display: flex; flex-direction: row; align-items: center; gap: 8px; }
+    .nxb-pagination__num { width: 24px; height: 24px; box-sizing: border-box; border: 0; border-radius: 4px; background: transparent; font-family: var(--font-sans); font-size: 14px; line-height: 24px; color: var(--nxb-text-muted); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background 120ms ease, color 120ms ease; }
+    .nxb-pagination__num:hover { background: var(--nxb-overlay-subtle); }
+    .nxb-pagination__num[aria-current="true"] { background: var(--nxb-overlay-light); color: var(--nxb-text-primary); }
+    .nxb-pagination__dots { width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; color: var(--nxb-text-muted); }
+    .nxb-pagination__dots svg { width: 12px; height: 12px; }
+
+
+/* ==================== Priority Dropdown  ·  components/priority-dropdown.html ==================== */
+.nxb-priority__stage { padding: 32px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+    .nxb-priority__spec { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .nxb-priority__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); }
+
+    /* ── Priority Dropdown — Figma 5693:1614 ── pill r999 · h40 · p 8/8/8/12 · gap8 · Mono/L 16/24 */
+    .nxb-priority {
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 40px; box-sizing: border-box;
+      padding: 8px 8px 8px 12px;
+      border: 0; border-radius: 999px;
+      font-family: var(--font-mono); font-size: 16px; line-height: 24px;
+      cursor: pointer; white-space: nowrap;
+      transition: background 120ms ease;
+    }
+    .nxb-priority__chev { flex: 0 0 auto; width: 16px; height: 16px; }
+    .nxb-priority__chev svg { width: 16px; height: 16px; display: block; }
+
+    /* Variants (idle) */
+    .nxb-priority--high { background: var(--nxb-status-high-bg);   box-shadow: inset 0 0 0 1px var(--nxb-status-high-border);   color: rgb(var(--nxb-status-high-text)); }
+    .nxb-priority--med  { background: var(--nxb-status-medium-bg); box-shadow: inset 0 0 0 1px var(--nxb-status-medium-border); color: rgb(var(--nxb-status-medium-text)); }
+    .nxb-priority--low  { background: var(--nxb-status-low-bg);    box-shadow: inset 0 0 0 1px var(--nxb-status-low-border);    color: rgb(var(--nxb-status-low-text)); }
+    .nxb-priority--def  { background: transparent;                 box-shadow: inset 0 0 0 1px var(--nxb-border-strong);        color: var(--nxb-text-primary); }
+
+    /* State: Hover / Focus — step to the 10% tint */
+    .nxb-priority--high.nxb-priority--hover, .nxb-priority--high.nxb-priority--focus { background: var(--nxb-status-high-bg-hover); }
+    .nxb-priority--med.nxb-priority--hover,  .nxb-priority--med.nxb-priority--focus  { background: var(--nxb-status-medium-bg-hover); }
+    .nxb-priority--low.nxb-priority--hover,  .nxb-priority--low.nxb-priority--focus  { background: var(--nxb-status-low-bg-hover); }
+    .nxb-priority--def.nxb-priority--hover,  .nxb-priority--def.nxb-priority--focus  { background: var(--nxb-overlay-light); }
+    .nxb-priority--focus { box-shadow: inset 0 0 0 1px var(--nxb-border-strong), 0 0 0 2px var(--nxb-surface-1), 0 0 0 6px var(--nxb-border-focus-ring); }
+    .nxb-priority--high.nxb-priority--focus { box-shadow: inset 0 0 0 1px var(--nxb-status-high-border),   0 0 0 2px var(--nxb-surface-1), 0 0 0 6px var(--nxb-border-focus-ring); }
+    .nxb-priority--med.nxb-priority--focus  { box-shadow: inset 0 0 0 1px var(--nxb-status-medium-border), 0 0 0 2px var(--nxb-surface-1), 0 0 0 6px var(--nxb-border-focus-ring); }
+    .nxb-priority--low.nxb-priority--focus  { box-shadow: inset 0 0 0 1px var(--nxb-status-low-border),    0 0 0 2px var(--nxb-surface-1), 0 0 0 6px var(--nxb-border-focus-ring); }
+
+    /* State: Selected (neutral, the chosen value shown closed) */
+    .nxb-priority--selected { background: var(--nxb-overlay-heavy); box-shadow: inset 0 0 0 1px var(--nxb-border-strong); color: var(--nxb-text-primary); }
+
+    /* State: Disabled */
+    .nxb-priority--disabled { background: var(--nxb-surface-3); box-shadow: inset 0 0 0 1px var(--nxb-border-disabled); color: var(--nxb-text-disabled); cursor: not-allowed; }
+
+    /* Live hover for interactive examples */
+    .nxb-priority--live.nxb-priority--high:hover { background: var(--nxb-status-high-bg-hover); }
+    .nxb-priority--live.nxb-priority--med:hover  { background: var(--nxb-status-medium-bg-hover); }
+    .nxb-priority--live.nxb-priority--low:hover  { background: var(--nxb-status-low-bg-hover); }
+    .nxb-priority--live.nxb-priority--def:hover  { background: var(--nxb-overlay-light); }
+
+
+/* ==================== Progress Bar  ·  components/progress-bar.html ==================== */
+.nxb-progress__stage { display: flex; flex-direction: column; gap: 20px; align-items: stretch; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); }
+    .nxb-progress__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+    /* ── Progress Bar — Figma 5693:669 ── track 8px r4 surface-3 · fill status-low · optional % */
+    .nxb-progress { display: flex; flex-direction: row; align-items: center; gap: 8px; }
+    .nxb-progress__track { flex: 1 1 auto; height: 8px; border-radius: 4px; background: var(--nxb-surface-3); overflow: hidden; }
+    .nxb-progress__fill { height: 8px; border-radius: 4px; background: var(--nxb-status-low-border); transition: width 320ms ease; }
+    .nxb-progress__fill--limited  { background: var(--nxb-status-high-border); }
+    .nxb-progress__fill--partial  { background: var(--nxb-status-medium-border); }
+    .nxb-progress__fill--good     { background: var(--nxb-status-low-border); }
+    .nxb-progress__fill--complete { background: var(--nxb-text-primary); }
+    .nxb-progress__pct { flex: 0 0 auto; width: 40px; text-align: right; font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: var(--nxb-text-muted); font-variant-numeric: tabular-nums; }
+
+    /* ── In context: form/report completion header ── */
+    .nxb-progress__report { width: 320px; max-width: 100%; border-radius: 16px; background: var(--nxb-surface-1); box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); overflow: hidden; }
+    .nxb-progress__report-top { padding: 16px 20px 0; }
+    .nxb-progress__report-title { font-family: var(--font-sans); font-size: 20px; font-weight: 500; line-height: 28px; color: var(--nxb-text-primary); }
+    .nxb-progress__report-sub { font-family: var(--font-sans); font-size: 12px; color: var(--nxb-text-muted); margin-top: 2px; }
+    .nxb-progress__report-bar { padding: 16px 20px; }
+    .nxb-progress__report-list { border-top: 0.5px solid var(--nxb-border-medium); }
+    .nxb-progress__step { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 0.5px solid var(--nxb-border-medium); }
+    .nxb-progress__step-num { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); width: 16px; }
+    .nxb-progress__step-label { flex: 1 1 auto; font-family: var(--font-sans); font-size: 14px; color: var(--nxb-text-primary); }
+    .nxb-progress__step-check { width: 18px; height: 18px; color: var(--nxb-status-low-border); }
+    .nxb-progress__step-chev { width: 16px; height: 16px; color: var(--nxb-text-muted); }
+
+    /* ── In context: objective card ── */
+    .nxb-progress__card { width: 320px; max-width: 100%; padding: 20px; border-radius: 16px; background: var(--nxb-surface-1); box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); }
+    .nxb-progress__card-eyebrow { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 4px; }
+    .nxb-progress__card-title { margin: 0 0 14px; font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: var(--nxb-text-primary); }
+    .nxb-progress__card-body { margin: 14px 0 0; font-family: var(--font-sans); font-size: 14px; color: var(--nxb-text-secondary); line-height: 1.55; }
+    /* Data-quality state label — Title/M, colour-matched to the fill */
+    .nxb-progress__state { margin: 14px 0 0; font-family: var(--font-sans); font-size: 20px; font-weight: 500; line-height: 28px; }
+    .nxb-progress__state--limited  { color: rgb(var(--nxb-status-high-text)); }
+    .nxb-progress__state--partial  { color: rgb(var(--nxb-status-medium-text)); }
+    .nxb-progress__state--good     { color: rgb(var(--nxb-status-low-text)); }
+    .nxb-progress__state--complete { color: var(--nxb-text-primary); }
+    .nxb-progress__state + .nxb-progress__card-body { margin-top: 6px; }
+    .adq-grid { display: grid; grid-template-columns: repeat(2, minmax(280px, 1fr)); gap: 16px; }
+    @media (max-width: 760px) { .adq-grid { grid-template-columns: 1fr; } }
+
+
+/* ==================== Search  ·  components/search.html ==================== */
+.nxb-search__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+    .nxb-search__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+    /* ── Search — Figma 5697:878 ── frosted pill (294) + 40px close icon button, gap 16 */
+    .nxb-search__bar { display: flex; flex-direction: row; align-items: center; gap: 16px; }
+    .nxb-search__field {
+      box-sizing: border-box; width: 294px; max-width: 100%; height: 40px;
+      display: flex; flex-direction: row; align-items: center; gap: 8px;
+      padding: 0 12px; border-radius: 999px;
+      background: var(--nxb-overlay-light);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium);
+    }
+    .nxb-search__mag { flex: 0 0 auto; width: 16px; height: 16px; color: var(--nxb-text-muted); }
+    .nxb-search__field:focus-within { box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium), 0 0 0 3px var(--nxb-border-focus-ring); }
+    .nxb-search__mag svg { width: 16px; height: 16px; display: block; }
+    .nxb-search__field--filled .nxb-search__mag { color: var(--nxb-text-primary); }
+    .nxb-search__input { flex: 1 1 auto; min-width: 0; border: 0; background: transparent; outline: none; font-family: var(--font-sans); font-size: 12px; line-height: 18px; color: var(--nxb-text-primary); padding: 0; }
+    .nxb-search__input::placeholder { color: var(--nxb-text-muted); }
+    .nxb-search__input:focus, .nxb-search__input:focus-visible { outline: none !important; box-shadow: none !important; }
+    .nxb-search__clear { flex: 0 0 auto; width: 16px; height: 16px; border: 0; background: transparent; padding: 0; color: var(--nxb-text-primary); cursor: pointer; display: inline-flex; }
+    .nxb-search__clear svg { width: 16px; height: 16px; }
+    .nxb-search__clear[hidden] { display: none; }
+
+    /* Frosted close icon button (40px) */
+    .nxb-search__close { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 999px; border: 0; background: var(--nxb-overlay-subtle); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--nxb-text-primary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+    .nxb-search__close:hover { background: var(--nxb-overlay-light); }
+    .nxb-search__close svg { width: 16px; height: 16px; }
+
+    /* Results */
+    .nxb-search__panel { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 8px; }
+    .nxb-search__count { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-search__jc { box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 16px 20px; border-radius: 16px; background: var(--nxb-surface-1); box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); }
+    .nxb-search__jc-content { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .nxb-search__jc-name { font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 24px; color: var(--nxb-text-primary); }
+    .nxb-search__jc-addr { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-search__jc-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-search__jc-tags { display: flex; flex-direction: row; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .nxb-search__jc-tag { display: inline-flex; align-items: center; height: 22px; padding: 4px 8px; border-radius: 4px; box-sizing: border-box; font-family: var(--font-mono); font-size: 10px; line-height: 14px; }
+    .nxb-search__jc-tag--default { background: var(--nxb-overlay-light); box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); color: var(--nxb-text-primary); }
+    .nxb-search__jc-tag--secondary { background: transparent; box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); color: var(--nxb-text-primary); }
+
+    /* No results — heading block + clear */
+    .nxb-search__empty { width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 16px 20px; }
+    .nxb-search__empty-title { font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 24px; color: var(--nxb-text-primary); text-align: center; }
+    .nxb-search__clear-btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; box-sizing: border-box; padding: 0 16px; border: 1px solid var(--nxb-status-high-border); border-radius: 999px; background: var(--nxb-status-high-bg); color: rgb(var(--nxb-status-high-text)); font-family: var(--font-sans); font-size: 14px; font-weight: 600; line-height: 24px; cursor: pointer; transition: background 120ms ease; }
+    .nxb-search__clear-btn:hover { background: var(--nxb-status-high-bg-hover); }
+
+
+/* ==================== Segmented Control  ·  components/segmented-control.html ==================== */
+.nxb-segmented__stage { padding: 28px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+    .nxb-segmented__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+    /* ── Segmented control — Figma 5693:839 ── 350w · 32h · radius-full · overlay-light track · 2px pad · 4px gap */
+    .nxb-segmented {
+      box-sizing: border-box;
+      display: inline-flex; flex-direction: row; align-items: center;
+      width: 100%; max-width: 350px; height: 32px;
+      padding: 2px; gap: 4px;
+      background: var(--nxb-overlay-light);
+      border-radius: 999px;
+    }
+    .nxb-segmented button {
+      flex: 1 1 0; min-width: 0; height: 28px;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0 12px; border: 0; background: transparent; border-radius: 999px;
+      font-family: var(--font-sans); font-size: 12px; line-height: 18px; font-weight: 400;
+      color: var(--nxb-text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      cursor: pointer; transition: background 120ms ease;
+    }
+    .nxb-segmented button:hover:not([aria-checked="true"]) { background: var(--nxb-overlay-subtle); }
+    .nxb-segmented button[aria-checked="true"] { background: var(--nxb-surface-1); font-weight: 600; }
+    .nxb-segmented button:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--nxb-border-focus-ring); }
+
+
+/* ==================== Spinner  ·  components/loading-spinner.html ==================== */
+@keyframes ls-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .nxb-spinner__spinner { animation: none; } }
+    .nxb-spinner__stage {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .nxb-spinner__card {
+      padding: 32px 16px;
+      border: 1px solid var(--nxb-border-low);
+      border-radius: 12px;
+      background: var(--nxb-surface-1);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+      min-height: 140px;
+    }
+    .nxb-spinner__card .lbl { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); }
+    .nxb-spinner__spinner {
+      display: inline-block;
+      color: var(--nxb-text-primary);
+      fill: currentColor;
+      animation: ls-spin 0.8s linear infinite;
+    }
+    .nxb-spinner__sm { width: 16px; height: 16px; }
+    .nxb-spinner__md { width: 32px; height: 32px; }
+    .nxb-spinner__lg { width: 48px; height: 48px; }
+    .nxb-spinner__msg { font-family: var(--font-sans); font-size: 14px; color: var(--nxb-text-muted); }
+
+
+/* ==================== Star Rating  ·  components/star-rating.html ==================== */
+.nxb-stars__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 28px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); }
+    .nxb-stars__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+    /* ── Star Rating — Figma 5697:204 ── 5× 24px stars · gap 6 · amber filled / grey outline ── */
+    .nxb-stars__stars { display: inline-flex; flex-direction: row; align-items: center; gap: 6px; }
+    .nxb-stars__star { width: 24px; height: 24px; padding: 0; border: 0; background: transparent; display: inline-flex; cursor: pointer; }
+    .nxb-stars__star svg { width: 24px; height: 24px; display: block; fill: none; stroke: var(--nxb-text-disabled); stroke-width: 1.5; stroke-linejoin: round; transition: fill 100ms ease, stroke 100ms ease; }
+    .nxb-stars__star--on svg { fill: var(--nxb-status-medium-border); stroke: var(--nxb-status-medium-border); }
+    .nxb-stars__star:focus-visible { outline: none; border-radius: 4px; box-shadow: 0 0 0 2px var(--nxb-border-focus-ring); }
+    .nxb-stars__stars--readonly .nxb-stars__star { cursor: default; }
+    .nxb-stars__val { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin-left: 4px; align-self: center; }
+    .nxb-stars__value-row { display: flex; align-items: center; gap: 12px; }
+
+
+/* ==================== Tag  ·  components/badges.html ==================== */
+/* Sub-heading within a badge section */
+    .bd-sub { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; color: var(--nxb-text-primary); margin: 26px 0 4px; }
+    /* Family overview */
+    .bd-family { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--nxb-border-low); border: 1px solid var(--nxb-border-low); border-radius: 12px; overflow: hidden; }
+    .bd-family-item { background: var(--nxb-surface-1); padding: 28px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .bd-family-stage { min-height: 40px; display: flex; align-items: center; }
+    .bd-family-name { font-size: 14px; font-weight: 600; color: var(--nxb-text-primary); margin: 0 0 4px; }
+    .bd-family-desc { font-size: 12px; line-height: 1.5; color: var(--nxb-text-muted); margin: 0; text-wrap: pretty; }
+    @media (max-width: 720px) { .bd-family { grid-template-columns: 1fr; } }
+
+    /* Static status example (overview) */
+    .bd-status-ex { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:4px; border:0.5px solid var(--nxb-status-high-border); background:var(--nxb-status-high-bg); color:rgb(var(--nxb-status-high-text)); font-size:12px; font-weight:500; text-transform:uppercase; }
+
+    /* Risk badge row */
+    .nxb-risk-badge__row { display: flex; gap: 12px; padding: 24px; flex-wrap: wrap; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); }
+    .nxb-risk-badge__tag { display:inline-flex; padding: 2px 8px; border-radius: 4px; border: 0.5px solid; font-family: var(--font-mono); font-weight: 500; font-size: 10px; letter-spacing: -0.13px; text-transform: uppercase; line-height: 14px; }
+    .nxb-risk-badge__h { background: var(--nxb-status-high-bg);   color: rgb(var(--nxb-status-high-text));   border-color: var(--nxb-status-high-border); }
+    .nxb-risk-badge__m { background: var(--nxb-status-medium-bg); color: rgb(var(--nxb-status-medium-text)); border-color: var(--nxb-status-medium-border); }
+    .nxb-risk-badge__l { background: var(--nxb-status-low-bg);    color: rgb(var(--nxb-status-low-text));    border-color: var(--nxb-status-low-border); }
+
+    /* Criticality grid */
+    .nxb-criticality__grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); }
+    .nxb-criticality__cell { display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .nxb-criticality__tag { display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 4px; border: 0.5px solid; font-family: var(--font-mono); font-weight: 500; font-size: 10px; letter-spacing: -0.13px; text-transform: uppercase; line-height: 14px; white-space: nowrap; }
+    .nxb-criticality__tag--h { background: var(--nxb-status-high-bg);   color: rgb(var(--nxb-status-high-text));   border-color: var(--nxb-status-high-border); }
+    .nxb-criticality__tag--m { background: var(--nxb-status-medium-bg); color: rgb(var(--nxb-status-medium-text)); border-color: var(--nxb-status-medium-border); }
+    .nxb-criticality__tag--l { background: var(--nxb-status-low-bg);    color: rgb(var(--nxb-status-low-text));    border-color: var(--nxb-status-low-border); }
+    .nxb-criticality__tag--n { background: var(--nxb-overlay-light);    color: var(--nxb-text-muted);              border-color: var(--nxb-border-medium); }
+    .nxb-criticality__cell-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--nxb-text-muted); }
+
+    /* Figma Tag — faithful 6-state reproduction (node 5693:604) */
+    .nxb-tag__states { display: flex; flex-wrap: wrap; gap: 24px; padding: 28px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); }
+    .nxb-tag__cell { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+    .nxb-tag__cap { font-family: var(--font-mono); font-size: 10px; color: var(--nxb-text-muted); }
+    .nxb-tag__state { display: inline-flex; align-items: center; gap: 8px; height: 22px; padding: 4px 8px; border-radius: 4px; box-sizing: border-box; font-family: var(--font-mono); font-size: 10px; line-height: 14px; font-weight: 400; white-space: nowrap; }
+    .nxb-tag__default   { background: var(--nxb-overlay-light); box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); color: var(--nxb-text-primary); }
+    .nxb-tag__secondary { background: transparent;             box-shadow: inset 0 0 0 0.5px var(--nxb-border-strong); color: var(--nxb-text-primary); }
+    .nxb-tag__high   { gap: 4px; background: var(--nxb-status-high-bg);   box-shadow: inset 0 0 0 0.5px var(--nxb-status-high-border);   color: rgb(var(--nxb-status-high-text)); }
+    .nxb-tag__medium {          background: var(--nxb-status-medium-bg); box-shadow: inset 0 0 0 0.5px var(--nxb-status-medium-border); color: rgb(var(--nxb-status-medium-text)); }
+    .nxb-tag__low    {          background: var(--nxb-status-low-bg);    box-shadow: inset 0 0 0 0.5px var(--nxb-status-low-border);    color: rgb(var(--nxb-status-low-text)); }
+    .nxb-tag__xhigh  { gap: 4px; height: 24px; background: var(--nxb-status-high-border); box-shadow: inset 0 0 0 0.5px var(--nxb-status-high-border); color: var(--nxb-text-on-emphasis); }
+    .nxb-tag__xhigh svg { width: 16px; height: 16px; }
+
+
+/* ==================== Input  ·  components/input.html ==================== */
+.nxb-input__grid { display: grid; gap: 20px; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+    .nxb-input__field { display: flex; flex-direction: column; gap: 4px; max-width: 350px; }
+
+    /* Label — Mono/S muted */
+    .nxb-input__label { font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: var(--nxb-text-muted); }
+    .nxb-input__head { display: flex; align-items: center; justify-content: space-between; }
+
+    /* ── Text Field — Figma 5692:1098 ── h52 · r8 · surface-1 · inset 0.5px border · p 0/16 · gap16 */
+    .nxb-input__input {
+      box-sizing: border-box; height: 52px; width: 100%;
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 16px; border-radius: 8px;
+      background: var(--nxb-surface-1);
+      box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium);
+      font-family: var(--font-sans); font-size: 14px; line-height: 24px;
+      color: var(--nxb-text-primary);
+      transition: background 120ms ease, box-shadow 120ms ease;
+    }
+    .nxb-input__bare { flex: 1; min-width: 0; border: 0; background: transparent; outline: none; font: inherit; color: var(--nxb-text-primary); padding: 0; }
+    .nxb-input__bare::placeholder { color: var(--nxb-text-muted); }
+    /* Wrapper owns the focus ring — the global .doc-content :is(...):focus-visible ring is higher
+       specificity, so suppress it on the inner input with !important */
+    .nxb-input__bare:focus, .nxb-input__bare:focus-visible { outline: none !important; box-shadow: none !important; }
+    .nxb-input__input:focus-within { box-shadow: 0 0 0 3px var(--nxb-border-focus-ring); }
+
+    /* States */
+    .nxb-input__input--hover { background: var(--nxb-surface-2); }
+    .nxb-input__input--focus { box-shadow: 0 0 0 3px var(--nxb-border-focus-ring); }
+    .nxb-input__input--error .nxb-input__bare, .nxb-input__input--error .nxb-input__val { color: rgb(var(--nxb-status-high-text)); }
+    .nxb-input__input--error-filled { background: var(--nxb-status-high-bg); box-shadow: inset 0 0 0 0.5px var(--nxb-status-high-border); }
+    .nxb-input__input--error-filled .nxb-input__bare, .nxb-input__input--error-filled .nxb-input__val { color: rgb(var(--nxb-status-high-text)); }
+    .nxb-input__input--disabled { background: var(--nxb-surface-3); box-shadow: none; cursor: not-allowed; }
+    .nxb-input__input--disabled .nxb-input__bare { color: var(--nxb-text-disabled); }
+    .nxb-input__input--disabled .nxb-input__bare::placeholder { color: var(--nxb-text-disabled); }
+    /* AI — brand-purple left accent */
+    .nxb-input__input--ai { position: relative; padding-left: 20px; overflow: hidden; }
+    .nxb-input__input--ai::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: rgb(var(--nxb-action-primary-bg)); }
+
+    /* Trailing icons */
+    .nxb-input__clear, .nxb-input__chev { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; padding: 0; color: var(--nxb-text-primary); cursor: pointer; }
+    .nxb-input__clear svg, .nxb-input__chev svg { width: 16px; height: 16px; }
+    .nxb-input__clear:hover { color: var(--nxb-text-primary); }
+    .nxb-input__clear[hidden] { display: none; }
+
+    /* Hint / error message — Micro muted / red */
+    .nxb-input__hint { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-input__input--disabled ~ .nxb-input__hint { color: var(--nxb-text-disabled); }
+    .nxb-input__err  { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: rgb(var(--nxb-status-high-text)); }
+    .nxb-input__err svg { width: 14px; height: 14px; flex: 0 0 auto; }
+
+    /* AI marker */
+    .nxb-input__ai-tag { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: rgb(var(--nxb-action-primary-bg)); }
+    .nxb-input__ai-tag svg { width: 14px; height: 14px; }
+
+    /* Textarea */
+    .nxb-input__textarea { box-sizing: border-box; min-height: 96px; width: 100%; resize: vertical; padding: 14px 16px; border-radius: 8px; background: var(--nxb-surface-1); box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); border: 0; color: var(--nxb-text-primary); font-family: var(--font-sans); font-size: 14px; line-height: 24px; }
+    .nxb-input__textarea::placeholder { color: var(--nxb-text-muted); }
+    .nxb-input__textarea:focus { outline: none; box-shadow: 0 0 0 3px var(--nxb-border-focus-ring); }
+
+
+/* ==================== Radio List  ·  components/radio-list.html ==================== */
+.nxb-radio__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Radio row — Figma 5697:203 ── 390w · border-medium · p 16/20 · items top (mirrors Checklist) */
+    .nxb-radio__row {
+      box-sizing: border-box; width: 100%; max-width: 390px;
+      display: flex; flex-direction: row; align-items: flex-start; gap: 16px;
+      padding: 16px 20px;
+      background: var(--nxb-surface-1);
+      cursor: pointer;
+      text-align: left;
+    }
+    .nxb-radio__row--bordered { box-shadow: inset 0 0 0 1px var(--nxb-border-medium); }
+
+    /* ── Radio button — 20×20 circle, 1px border-strong; selected fills text-primary + white dot ── */
+    .nxb-radio__radio {
+      flex: 0 0 auto; margin-top: 2px;
+      width: 20px; height: 20px; border-radius: 9999px; box-sizing: border-box;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--nxb-border-strong);
+      transition: background 120ms ease, box-shadow 120ms ease;
+    }
+    .nxb-radio__dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--nxb-text-inverse); opacity: 0; transition: opacity 120ms ease; }
+    .nxb-radio__row[aria-checked="true"] .nxb-radio__radio { background: var(--nxb-text-primary); box-shadow: inset 0 0 0 1px var(--nxb-text-primary); }
+    .nxb-radio__row[aria-checked="true"] .nxb-radio__dot { opacity: 1; }
+
+    .nxb-radio__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .nxb-radio__title { font-family: var(--font-sans); font-size: 14px; font-weight: 400; line-height: 24px; color: var(--nxb-text-primary); }
+    .nxb-radio__opt { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+
+    /* Stacked list — rows share a hairline */
+    .nxb-radio__list { width: 100%; max-width: 390px; border: 1px solid var(--nxb-border-medium); border-radius: 12px; overflow: hidden; background: var(--nxb-surface-1); }
+    .nxb-radio__list .nxb-radio__row { width: 100%; box-shadow: none; }
+    .nxb-radio__list .nxb-radio__row + .nxb-radio__row { border-top: 0.5px solid var(--nxb-border-medium); }
+
+    .nxb-radio__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Radio Card  ·  components/radio-card.html ==================== */
+.nxb-radio-card__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Radio Card — Figma 5697:316 ── 350w · r8 · surface-1 · p16 · gap16; border darkens when selected (mirrors Check Card) */
+    .nxb-radio-card {
+      box-sizing: border-box; width: 100%; max-width: 350px;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 16px; border-radius: 8px;
+      background: var(--nxb-surface-1);
+      box-shadow: inset 0 0 0 1px var(--nxb-border-low);
+      cursor: pointer; text-align: left;
+      transition: box-shadow 120ms ease;
+    }
+    .nxb-radio-card[aria-checked="true"] { box-shadow: inset 0 0 0 1px var(--nxb-border-strong); }
+
+    .nxb-radio-card__head { display: flex; flex-direction: row; align-items: flex-start; gap: 16px; }
+    .nxb-radio-card__titles { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .nxb-radio-card__title { font-family: var(--font-sans); font-size: 14px; font-weight: 400; line-height: 24px; color: var(--nxb-text-primary); }
+    .nxb-radio-card__opt { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-muted); }
+
+    /* Radio — 20×20 circle, 1px border-strong; selected fills text-primary + 8px white dot */
+    .nxb-radio-card__radio {
+      flex: 0 0 auto; margin-top: 2px;
+      width: 20px; height: 20px; border-radius: 9999px; box-sizing: border-box;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--nxb-border-strong);
+      transition: background 120ms ease, box-shadow 120ms ease;
+    }
+    .nxb-radio-card__dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--nxb-text-inverse); opacity: 0; transition: opacity 120ms ease; }
+    .nxb-radio-card[aria-checked="true"] .nxb-radio-card__radio { background: var(--nxb-text-primary); box-shadow: inset 0 0 0 1px var(--nxb-text-primary); }
+    .nxb-radio-card[aria-checked="true"] .nxb-radio-card__dot { opacity: 1; }
+
+    /* Embedded Document Cell (status strip) */
+    .nxb-radio-card__doc { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; background: var(--nxb-surface-2); box-shadow: inset 0 0 0 0.5px var(--nxb-border-low); }
+    .nxb-radio-card__doc-icon { flex: 0 0 auto; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; color: var(--nxb-text-muted); }
+    .nxb-radio-card__doc-icon svg { width: 20px; height: 20px; }
+    .nxb-radio-card__doc-text { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-secondary); }
+
+    /* Full Document Cell */
+    .nxb-radio-card__docfull { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; background: var(--nxb-surface-2); box-shadow: inset 0 0 0 0.5px var(--nxb-border-low); }
+    .nxb-radio-card__docfull-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .nxb-radio-card__docfull-name { font-family: var(--font-sans); font-size: 12px; font-weight: 600; line-height: 18px; color: var(--nxb-text-primary); }
+    .nxb-radio-card__docfull-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-radio-card__docfull-cta { flex: 0 0 auto; width: 32px; height: 32px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; color: var(--nxb-text-muted); background: transparent; }
+    .nxb-radio-card__docfull-cta svg { width: 16px; height: 16px; }
+
+    .nxb-radio-card__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Checklist  ·  components/checklist.html ==================== */
+.nxb-checklist__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Checklist row — Figma 5694:92 ── 390w · border-medium · p 16/20 · gap 8 · items top */
+    .nxb-checklist__row {
+      box-sizing: border-box; width: 100%; max-width: 390px;
+      display: flex; flex-direction: row; align-items: flex-start; gap: 16px;
+      padding: 16px 20px;
+      background: var(--nxb-surface-1);
+      cursor: pointer;
+      text-align: left;
+    }
+    .nxb-checklist__row--bordered { box-shadow: inset 0 0 0 1px var(--nxb-border-medium); }
+
+    /* ── Checkbox — CheckDefault/CheckSelected 5694:53/50 ── 18×18, 1px text-primary outline ── */
+    .nxb-checklist__box {
+      flex: 0 0 auto; margin-top: 3px;
+      width: 18px; height: 18px; border-radius: 4px; box-sizing: border-box;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--nxb-text-primary);
+      transition: background 120ms ease;
+    }
+    .nxb-checklist__box svg { width: 14px; height: 14px; color: var(--nxb-text-inverse); opacity: 0; transition: opacity 120ms ease; }
+    .nxb-checklist__row[aria-checked="true"] .nxb-checklist__box { background: var(--nxb-text-primary); }
+    .nxb-checklist__row[aria-checked="true"] .nxb-checklist__box svg { opacity: 1; }
+
+    .nxb-checklist__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .nxb-checklist__title { font-family: var(--font-sans); font-size: 14px; font-weight: 400; line-height: 24px; color: var(--nxb-text-primary); }
+    .nxb-checklist__opt { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); }
+
+    /* Stacked list — rows share a hairline */
+    .nxb-checklist__list { width: 100%; max-width: 390px; border: 1px solid var(--nxb-border-medium); border-radius: 12px; overflow: hidden; background: var(--nxb-surface-1); }
+    .nxb-checklist__list .nxb-checklist__row { width: 100%; box-shadow: none; }
+    .nxb-checklist__list .nxb-checklist__row + .nxb-checklist__row { border-top: 0.5px solid var(--nxb-border-medium); }
+
+    .nxb-checklist__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Check Card  ·  components/check-card.html ==================== */
+.nxb-check-card__stage { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-page); }
+
+    /* ── Check Card — Figma 5697:971 ── 350w · r8 · surface-1 · p16 · gap16; border darkens when selected */
+    .nxb-check-card {
+      box-sizing: border-box; width: 100%; max-width: 350px;
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--nxb-surface-1);
+      box-shadow: inset 0 0 0 1px var(--nxb-border-low);
+      cursor: pointer; text-align: left;
+      transition: box-shadow 120ms ease;
+    }
+    .nxb-check-card[aria-checked="true"] { box-shadow: inset 0 0 0 1px var(--nxb-border-strong); }
+
+    .nxb-check-card__head { display: flex; flex-direction: row; align-items: flex-start; gap: 16px; }
+    .nxb-check-card__titles { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .nxb-check-card__title { font-family: var(--font-sans); font-size: 14px; font-weight: 400; line-height: 24px; color: var(--nxb-text-primary); }
+    .nxb-check-card__opt { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-muted); }
+
+    /* Checkbox — CheckDefault/CheckSelected 5694:53/50 (shared with Checklist): 18×18, 1px text-primary outline */
+    .nxb-check-card__box {
+      flex: 0 0 auto; margin-top: 3px;
+      width: 18px; height: 18px; border-radius: 4px; box-sizing: border-box;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: transparent;
+      box-shadow: inset 0 0 0 1px var(--nxb-text-primary);
+      transition: background 120ms ease;
+    }
+    .nxb-check-card__box svg { width: 14px; height: 14px; color: var(--nxb-text-inverse); opacity: 0; transition: opacity 120ms ease; }
+    .nxb-check-card[aria-checked="true"] .nxb-check-card__box { background: var(--nxb-text-primary); }
+    .nxb-check-card[aria-checked="true"] .nxb-check-card__box svg { opacity: 1; }
+
+    /* Embedded Document Cell (status strip) — surface-2, r8, 0.5px border-low */
+    .nxb-check-card__doc { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; background: var(--nxb-surface-2); box-shadow: inset 0 0 0 0.5px var(--nxb-border-low); }
+    .nxb-check-card__doc-icon { flex: 0 0 auto; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; color: var(--nxb-text-muted); }
+    .nxb-check-card__doc-icon svg { width: 20px; height: 20px; }
+    .nxb-check-card__doc-text { font-family: var(--font-sans); font-size: 12px; font-weight: 400; line-height: 18px; color: var(--nxb-text-secondary); }
+
+    /* Full Document Cell (for the anatomy reference / "with document" example) */
+    .nxb-check-card__docfull { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; background: var(--nxb-surface-2); box-shadow: inset 0 0 0 0.5px var(--nxb-border-low); }
+    .nxb-check-card__docfull .nxb-check-card__doc-icon { color: var(--nxb-text-muted); }
+    .nxb-check-card__docfull-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .nxb-check-card__docfull-name { font-family: var(--font-sans); font-size: 12px; font-weight: 600; line-height: 18px; color: var(--nxb-text-primary); }
+    .nxb-check-card__docfull-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; line-height: 14px; color: var(--nxb-text-muted); }
+    .nxb-check-card__docfull-cta { flex: 0 0 auto; width: 32px; height: 32px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; color: var(--nxb-text-muted); background: transparent; }
+    .nxb-check-card__docfull-cta svg { width: 16px; height: 16px; }
+
+    .nxb-check-card__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); margin: 0 0 8px; }
+
+
+/* ==================== Dropdown  ·  components/dropdown.html ==================== */
+.nxb-dropdown__stage { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; padding: 32px 24px; border: 1px solid var(--nxb-border-low); border-radius: 12px; background: var(--nxb-surface-1); }
+    .nxb-dropdown__spec { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .nxb-dropdown__cap { font-family: var(--font-mono); font-size: 12px; color: var(--nxb-text-muted); }
+
+    /* ── Dropdown trigger — Figma 5521:440 ── pill r999 · h32 · p 8/8/8/12 · gap 8 */
+    .nxb-dropdown {
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 32px; box-sizing: border-box;
+      padding: 8px 8px 8px 12px;
+      border: 0; border-radius: 999px;
+      background: var(--nxb-overlay-light);
+      font-family: var(--font-sans); font-size: 12px; line-height: 18px; color: var(--nxb-text-primary);
+      cursor: pointer; white-space: nowrap;
+      transition: background 120ms ease;
+    }
+    .nxb-dropdown__count {
+      flex: 0 0 auto; min-width: 20px; height: 20px; box-sizing: border-box;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0 4px; border-radius: 999px;
+      background: var(--nxb-overlay-light);
+      font-family: var(--font-sans); font-size: 12px; line-height: 18px; color: var(--nxb-text-primary);
+    }
+    .nxb-dropdown__chev { flex: 0 0 auto; width: 16px; height: 16px; color: var(--nxb-text-primary); }
+    .nxb-dropdown__chev svg { width: 16px; height: 16px; display: block; }
+
+    /* States */
+    .nxb-dropdown--hover   { background: var(--nxb-overlay-medium); }
+    .nxb-dropdown--focus   { background: var(--nxb-overlay-medium); box-shadow: 0 0 0 2px var(--nxb-surface-1), 0 0 0 6px var(--nxb-border-focus-ring); }
+    .nxb-dropdown--pressed { background: var(--nxb-overlay-heavy); }
+    .nxb-dropdown--disabled { background: var(--nxb-surface-3); color: var(--nxb-text-disabled); cursor: not-allowed; }
+    .nxb-dropdown--disabled .nxb-dropdown__count { color: var(--nxb-text-disabled); }
+    .nxb-dropdown--disabled .nxb-dropdown__chev { color: var(--nxb-text-disabled); }
+    /* Live hover for interactive examples */
+    .nxb-dropdown--live:hover { background: var(--nxb-overlay-medium); }
+    .nxb-dropdown--live:active { background: var(--nxb-overlay-heavy); }
+    .nxb-dropdown--live:focus-visible { outline: none; background: var(--nxb-overlay-medium); box-shadow: 0 0 0 2px var(--nxb-surface-1), 0 0 0 6px var(--nxb-border-focus-ring); }
+
+    /* Open menu (multi-select) */
+    .nxb-dropdown__wrap { position: relative; display: inline-block; }
+    .nxb-dropdown__menu { margin-top: 8px; width: 220px; padding: 6px; border-radius: 12px; background: var(--nxb-surface-1); box-shadow: inset 0 0 0 0.5px var(--nxb-border-medium); }
+    .nxb-dropdown__opt { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-family: var(--font-sans); font-size: 12px; line-height: 18px; color: var(--nxb-text-primary); }
+    .nxb-dropdown__opt:hover { background: var(--nxb-overlay-light); }
+    .nxb-dropdown__check { flex: 0 0 auto; width: 16px; height: 16px; border-radius: 4px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px var(--nxb-text-primary); }
+    .nxb-dropdown__check svg { width: 12px; height: 12px; color: var(--nxb-text-inverse); opacity: 0; }
+    .nxb-dropdown__opt[aria-selected="true"] .nxb-dropdown__check { background: var(--nxb-text-primary); }
+    .nxb-dropdown__opt[aria-selected="true"] .nxb-dropdown__check svg { opacity: 1; }

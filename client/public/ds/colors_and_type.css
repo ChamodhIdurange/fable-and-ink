@@ -1,0 +1,428 @@
+/* ============================================================
+ * NxB Unify — Resolve Design Tokens
+ * Ported verbatim from IFS-NXB/product-base @ frontend/app/globals.css
+ * Theme is controlled via the .dark class on <html>.
+ *
+ * Two layers:
+ *   1. Canonical contract  — the product-base token names (source of truth).
+ *   2. Compatibility layer  — additive aliases + semantic helpers so DS
+ *      showcase pages and existing prototypes keep resolving. See bottom.
+ * ============================================================ */
+
+/* ============================================================
+ * Fonts (real licensed fonts from product-base/frontend/public)
+ * Paths are relative to the location of this stylesheet,
+ * so they resolve correctly from any page that links to it.
+ * ============================================================ */
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("fonts/SuisseIntl-Regular.otf") format("opentype");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("fonts/SuisseIntl-Medium.otf") format("opentype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("fonts/SuisseIntl-SemiBold.otf") format("opentype");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Suisse Intl";
+  src: url("fonts/SuisseIntl-Bold.otf") format("opentype");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Suisse Intl Mono";
+  src: url("fonts/SuisseIntlMono-Thin.otf") format("opentype");
+  font-weight: 100 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Suisse Intl Mono";
+  src: url("fonts/SuisseIntlMono-Regular.otf") format("opentype");
+  font-weight: 400 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Suisse Intl Mono";
+  src: url("fonts/SuisseIntlMono-Bold.otf") format("opentype");
+  font-weight: 600 700; font-style: normal; font-display: swap;
+}
+
+/* PP Supply Mono — BRAND display face. Reserved for the product-name
+ * lockup (NxB/{Product}) and the app-icon mark. Not the system mono. */
+@font-face {
+  font-family: "PP Supply Mono";
+  src: url("fonts/PPSupplyMono-Ultralight.ttf") format("truetype");
+  font-weight: 200; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "PP Supply Mono";
+  src: url("fonts/PPSupplyMono-Regular.ttf") format("truetype");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "PP Supply Mono";
+  src: url("fonts/PPSupplyMono-Medium.ttf") format("truetype");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "PP Supply Mono";
+  src: url("fonts/PPSupplyMono-Bold.ttf") format("truetype");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+:root {
+  --font-sans: "Suisse Intl", system-ui, -apple-system, sans-serif;
+  --font-mono: "Suisse Intl Mono", ui-monospace, "SFMono-Regular", "Courier New", monospace;
+  /* Brand display face — product-name lockup + app-icon mark only. */
+  --font-brand: "PP Supply Mono", var(--font-mono);
+  --radius-4xl: 1.5rem;
+  --radius-pill: 9999px;
+  --radius-input: 8px;
+  --radius-badge: 6px;
+
+  /* Surfaces */
+  --nxb-surface-1: #fafafa;
+  --nxb-surface-2: #f2f2f2;
+  --nxb-surface-3: #e6e6e6;
+  --nxb-surface-4: #17181b;
+  --nxb-surface-page: #f2f2f2;
+  /* Neutral-purple ramp (Figma primitive) */
+  --nxb-neutral-purple-150: rgb(236, 234, 241);
+  --nxb-surface-page-rgb: 242 242 242;
+
+  /* Text */
+  --nxb-text-primary: #090909;
+  --nxb-text-secondary: #222222;
+  --nxb-text-muted: #6b6b6b;
+  --nxb-text-disabled: #afafaf;
+  --nxb-text-inverse: #fafafa;
+  --nxb-text-on-emphasis: #fafafa;
+  --nxb-text-link: #7420ce;
+
+  /* Borders */
+  --nxb-border-low: rgba(0, 0, 0, 0.05);
+  --nxb-border-medium: rgba(0, 0, 0, 0.10);
+  --nxb-border-strong: rgba(0, 0, 0, 0.20);
+  --nxb-border-focus: #000000;
+  --nxb-border-focus-ring: #0365d8;
+  --nxb-border-error: #b73030;
+  --nxb-border-disabled: #e6e6e6;
+
+  /* Action: Primary */
+  --nxb-action-primary-bg: 132 39 226;
+  --nxb-action-primary-hover: #611cb2;
+  --nxb-action-primary-pressed: #3f1378;
+  --nxb-action-primary-text: #ffffff;
+  --nxb-action-primary-from: #4f1795;
+  --nxb-action-primary-to: #8427e2;
+
+  /* Action: Secondary */
+  --nxb-action-secondary-bg: rgba(0, 0, 0, 0.05);
+  --nxb-action-secondary-hover: rgba(0, 0, 0, 0.10);
+  --nxb-action-secondary-pressed: rgba(0, 0, 0, 0.20);
+  --nxb-action-secondary-text: #000000;
+
+  /* Action: Tertiary Brand */
+  --nxb-action-tertiary-brand-bg: transparent;
+  --nxb-action-tertiary-brand-hover: rgba(3, 101, 216, 0.05);
+  --nxb-action-tertiary-brand-pressed: rgba(3, 101, 216, 0.15);
+  --nxb-action-tertiary-brand-text: #000000;
+  --nxb-action-tertiary-brand-border: #0365d8;
+
+  /* Action: Tertiary Neutral */
+  --nxb-action-tertiary-neutral-bg: transparent;
+  --nxb-action-tertiary-neutral-hover: rgba(0, 0, 0, 0.05);
+  --nxb-action-tertiary-neutral-pressed: rgba(0, 0, 0, 0.20);
+  --nxb-action-tertiary-neutral-text: #000000;
+
+  /* Action: Inverse */
+  --nxb-action-inverse-bg: #000000;
+  --nxb-action-inverse-hover: #101011;
+  --nxb-action-inverse-pressed: #8c8c8c;
+  --nxb-action-inverse-text: #fafafa;
+
+  /* Action: Ghost */
+  --nxb-action-ghost-bg: transparent;
+  --nxb-action-ghost-hover: rgba(0, 0, 0, 0.05);
+  --nxb-action-ghost-pressed: rgba(0, 0, 0, 0.20);
+  --nxb-action-ghost-text: #000000;
+
+  /* Status: High (Error/Critical) */
+  --nxb-status-high-bg: rgba(239, 68, 68, 0.05);
+  --nxb-status-high-bg-hover: rgba(239, 68, 68, 0.10);
+  --nxb-status-high-text: 183 48 48;
+  --nxb-status-high-border: #b73030;
+
+  /* Status: Medium (Warning) */
+  --nxb-status-medium-bg: rgba(255, 170, 53, 0.05);
+  --nxb-status-medium-bg-hover: rgba(255, 170, 53, 0.10);
+  --nxb-status-medium-text: 184 109 5;
+  --nxb-status-medium-border: #b86d05;
+
+  /* Status: Low (Success) */
+  --nxb-status-low-bg: rgba(39, 182, 99, 0.05);
+  --nxb-status-low-bg-hover: rgba(39, 182, 99, 0.10);
+  --nxb-status-low-text: 24 126 67;
+  --nxb-status-low-border: #187e43;
+
+  /* Status: Info (OK/Active) */
+  --nxb-status-ok: 3 101 216; /* @kind color */
+  --nxb-status-ok-bg: rgba(3, 101, 216, 0.15);
+  --nxb-status-ok-bg-hover: rgba(3, 101, 216, 0.25);
+
+  /* Overlays */
+  --nxb-overlay-subtle: rgba(0, 0, 0, 0.03);
+  --nxb-overlay-light: rgba(0, 0, 0, 0.05);
+  --nxb-overlay-medium: rgba(0, 0, 0, 0.10);
+  --nxb-overlay-heavy: rgba(0, 0, 0, 0.20);
+
+  /* Glass */
+  --nxb-glass-bg: rgba(0, 0, 0, 0.03);
+  --nxb-glass-border: rgba(0, 0, 0, 0.08);
+  --nxb-glass-hover: rgba(0, 0, 0, 0.05);
+  --nxb-glass-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+
+  /* Backdrop / Modal */
+  --nxb-backdrop: rgba(0, 0, 0, 0.40);
+  --nxb-modal-bg: rgba(255, 255, 255, 0.92);
+
+  /* Scrollbar */
+  --nxb-scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --nxb-scrollbar-hover: rgba(0, 0, 0, 0.25);
+
+  /* Visualisation — categorical */
+  --nxb-viz-cat-1: #9b3fb8;
+  --nxb-viz-cat-2: #00b8c8;
+  --nxb-viz-cat-3: #e8822a;
+  --nxb-viz-cat-4: #3b82d4;
+  --nxb-viz-cat-5: #4eb86a;
+  --nxb-viz-cat-6: #d44f78;
+
+  /* Visualisation — sequential */
+  --nxb-viz-seq-1: #dcd8e6;
+  --nxb-viz-seq-2: #c9c3d6;
+  --nxb-viz-seq-3: #afa8bf;
+  --nxb-viz-seq-4: #9189a3;
+  --nxb-viz-seq-5: #756d88;
+
+  /* Visualisation — diverging */
+  --nxb-viz-div-neg-strong: #8c2800;
+  --nxb-viz-div-neg-mid: #e05020;
+  --nxb-viz-div-neutral: #c8c2ba;
+  --nxb-viz-div-pos-mid: #00c8b8;
+  --nxb-viz-div-pos-strong: #008a7c;
+}
+
+.dark {
+  /* Surfaces */
+  --nxb-surface-1: #101011;
+  --nxb-surface-2: #17181b;
+  --nxb-surface-3: #1e1f22;
+  --nxb-surface-4: #17181b;
+  --nxb-surface-page: #090909;
+  /* Neutral-purple ramp (Figma primitive) — dark step */
+  --nxb-neutral-purple-150: rgb(47, 43, 59);
+  --nxb-surface-page-rgb: 9 9 9;
+
+  /* Text */
+  --nxb-text-primary: #f2f2f2;
+  --nxb-text-secondary: #c7c7c7;
+  --nxb-text-muted: #afafaf;
+  --nxb-text-disabled: #6b6b6b;
+  --nxb-text-inverse: #090909;
+  --nxb-text-on-emphasis: #fafafa;
+  --nxb-text-link: #a867ee;
+
+  /* Borders */
+  --nxb-border-low: rgba(255, 255, 255, 0.05);
+  --nxb-border-medium: rgba(255, 255, 255, 0.10);
+  --nxb-border-strong: rgba(255, 255, 255, 0.20);
+  --nxb-border-focus: #ffffff;
+  --nxb-border-focus-ring: #0365d8;
+  --nxb-border-error: #ef4444;
+  --nxb-border-disabled: #222222;
+
+  /* Action: Primary */
+  --nxb-action-primary-bg: 132 39 226;
+  --nxb-action-primary-hover: #c199f6;
+  --nxb-action-primary-pressed: #f6eefe;
+  --nxb-action-primary-text: #ffffff;
+  --nxb-action-primary-from: #48157c;
+  --nxb-action-primary-to: #8427e2;
+
+  /* Action: Secondary */
+  --nxb-action-secondary-bg: rgba(255, 255, 255, 0.10);
+  --nxb-action-secondary-hover: rgba(255, 255, 255, 0.15);
+  --nxb-action-secondary-pressed: rgba(255, 255, 255, 0.20);
+  --nxb-action-secondary-text: #ffffff;
+
+  /* Action: Tertiary Brand */
+  --nxb-action-tertiary-brand-bg: transparent;
+  --nxb-action-tertiary-brand-hover: rgba(255, 255, 255, 0.05);
+  --nxb-action-tertiary-brand-pressed: rgba(255, 255, 255, 0.20);
+  --nxb-action-tertiary-brand-text: #ffffff;
+  --nxb-action-tertiary-brand-border: #0365d8;
+
+  /* Action: Tertiary Neutral */
+  --nxb-action-tertiary-neutral-bg: transparent;
+  --nxb-action-tertiary-neutral-hover: rgba(255, 255, 255, 0.05);
+  --nxb-action-tertiary-neutral-pressed: rgba(255, 255, 255, 0.20);
+  --nxb-action-tertiary-neutral-text: #ffffff;
+
+  /* Action: Inverse */
+  --nxb-action-inverse-bg: #ffffff;
+  --nxb-action-inverse-hover: #f2f2f2;
+  --nxb-action-inverse-pressed: #8c8c8c;
+  --nxb-action-inverse-text: #090909;
+
+  /* Action: Ghost */
+  --nxb-action-ghost-bg: transparent;
+  --nxb-action-ghost-hover: rgba(255, 255, 255, 0.05);
+  --nxb-action-ghost-pressed: rgba(255, 255, 255, 0.20);
+  --nxb-action-ghost-text: #ffffff;
+
+  /* Status */
+  --nxb-status-high-bg: rgba(239, 68, 68, 0.05);
+  --nxb-status-high-bg-hover: rgba(239, 68, 68, 0.30);
+  --nxb-status-high-text: 239 68 68;
+  --nxb-status-high-border: #b73030;
+
+  --nxb-status-medium-bg: rgba(255, 170, 53, 0.05);
+  --nxb-status-medium-bg-hover: rgba(255, 170, 53, 0.30);
+  --nxb-status-medium-text: 245 158 11;
+  --nxb-status-medium-border: #f59e0b;
+
+  --nxb-status-low-bg: rgba(39, 182, 99, 0.05);
+  --nxb-status-low-bg-hover: rgba(39, 182, 99, 0.30);
+  --nxb-status-low-text: 39 182 99;
+  --nxb-status-low-border: #27b663;
+
+  --nxb-status-ok: 3 101 216; /* @kind color */
+  --nxb-status-ok-bg: rgba(3, 101, 216, 0.15);
+  --nxb-status-ok-bg-hover: rgba(3, 101, 216, 0.30);
+
+  /* Overlays */
+  --nxb-overlay-subtle: rgba(255, 255, 255, 0.03);
+  --nxb-overlay-light: rgba(255, 255, 255, 0.05);
+  --nxb-overlay-medium: rgba(255, 255, 255, 0.10);
+  --nxb-overlay-heavy: rgba(255, 255, 255, 0.20);
+
+  /* Glass */
+  --nxb-glass-bg: rgba(255, 255, 255, 0.03);
+  --nxb-glass-border: rgba(255, 255, 255, 0.08);
+  --nxb-glass-hover: rgba(255, 255, 255, 0.05);
+  --nxb-glass-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+
+  /* Backdrop / Modal */
+  --nxb-backdrop: rgba(0, 0, 0, 0.60);
+  --nxb-modal-bg: rgba(14, 14, 14, 0.80);
+
+  /* Scrollbar */
+  --nxb-scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --nxb-scrollbar-hover: rgba(255, 255, 255, 0.25);
+
+  /* Visualisation (same hex; only neutral midpoint of diverging changes) */
+  --nxb-viz-cat-1: #9b3fb8;
+  --nxb-viz-cat-2: #00b8c8;
+  --nxb-viz-cat-3: #e8822a;
+  --nxb-viz-cat-4: #3b82d4;
+  --nxb-viz-cat-5: #4eb86a;
+  --nxb-viz-cat-6: #d44f78;
+  --nxb-viz-seq-1: #dcd8e6;
+  --nxb-viz-seq-2: #c9c3d6;
+  --nxb-viz-seq-3: #afa8bf;
+  --nxb-viz-seq-4: #9189a3;
+  --nxb-viz-seq-5: #756d88;
+  --nxb-viz-div-neg-strong: #8c2800;
+  --nxb-viz-div-neg-mid: #e05020;
+  --nxb-viz-div-neutral: #6b6460;
+  --nxb-viz-div-pos-mid: #00c8b8;
+  --nxb-viz-div-pos-strong: #008a7c;
+}
+
+/* ============================================================
+ * Compatibility layer (additive) — NxB Unify
+ * Convenience aliases derived from the canonical tokens above, plus
+ * brand/scale tokens and semantic type helpers used by the DS
+ * showcase pages. These never override the contract; they map old →
+ * new so prototypes built before the rename keep rendering.
+ * ============================================================ */
+:root {
+  /* Action aliases (canonical names carry the -bg suffix) */
+  --nxb-action-primary: rgb(var(--nxb-action-primary-bg));
+  --nxb-action-secondary: var(--nxb-action-secondary-bg);
+  --nxb-action-inverse: var(--nxb-action-inverse-bg);
+  --nxb-action-tertiary-brand: var(--nxb-action-tertiary-brand-bg);
+
+  /* Status text colours (canonical names carry the -text RGB triplet) */
+  --nxb-status-high: rgb(var(--nxb-status-high-text));
+  --nxb-status-medium: rgb(var(--nxb-status-medium-text));
+  --nxb-status-low: rgb(var(--nxb-status-low-text));
+
+  /* Brand sparkle — IFS parent lockup only */
+  --nxb-brand-sparkle-from: #72c9f8;
+  --nxb-brand-sparkle-to: #8427e2;
+
+  /* 4px spacing scale */
+  --space-1: 4px;  --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 20px; --space-6: 24px;  --space-8: 32px;  --space-10: 40px;
+  --space-12: 48px; --space-16: 64px; --space-24: 96px;
+
+  /* Component radii (canonical set is --radius-4xl / -pill / -input / -badge) */
+  --radius-nav: 6px;
+  --radius-pill-sm: 12px;
+  --radius-card: 16px;
+  --radius-modal: 24px;
+}
+
+/* Semantic type helpers (mirror Figma textStyles) */
+.h1     { font-family: var(--font-sans); font-weight: 500; font-size: 28px; line-height: 1.2; letter-spacing: -0.6px; color: var(--nxb-text-primary); }
+.h2     { font-family: var(--font-sans); font-weight: 500; font-size: 18px; line-height: 24px; color: var(--nxb-text-primary); }
+.h3     { font-family: var(--font-sans); font-weight: 500; font-size: 16px; line-height: 1.3; color: var(--nxb-text-primary); }
+.body-l { font-family: var(--font-sans); font-size: 16px; line-height: 1.5; color: var(--nxb-text-secondary); }
+.body   { font-family: var(--font-sans); font-size: 14px; line-height: 1.5; letter-spacing: -0.25px; color: var(--nxb-text-secondary); }
+.body-s { font-family: var(--font-sans); font-size: 12px; line-height: 18px; color: var(--nxb-text-primary); }
+.label  { font-family: var(--font-sans); font-size: 10px; font-weight: 500; line-height: 14px; color: var(--nxb-text-muted); text-transform: uppercase; }
+.meta   { font-family: var(--font-sans); font-size: 12px; color: var(--nxb-text-muted); letter-spacing: -0.25px; }
+.code, .mono { font-family: var(--font-mono); font-size: 12px; }
+.logo-mark { font-family: var(--font-brand); font-weight: 500; font-size: 16px; letter-spacing: -0.64px; color: var(--nxb-text-primary); line-height: 1.3; }
+.logo-mark .slash { color: var(--nxb-text-muted); }
+
+/* ============================================================
+ * Reset + base
+ * ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  background: var(--nxb-surface-page);
+  color: var(--nxb-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.font-mono, code, pre, kbd, samp { font-family: var(--font-mono); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--nxb-scrollbar-thumb); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--nxb-scrollbar-hover); }
+* { scrollbar-width: thin; scrollbar-color: var(--nxb-scrollbar-thumb) transparent; }
+
+/* Utilities mirrored from globals.css */
+.glass-panel {
+  background: var(--nxb-glass-bg);
+  border: 1px solid var(--nxb-glass-border);
+  border-radius: 16px;
+  backdrop-filter: saturate(1.2) blur(12px);
+  -webkit-backdrop-filter: saturate(1.2) blur(12px);
+  box-shadow: 0 0 0 1px var(--nxb-glass-border) inset, var(--nxb-glass-shadow);
+}
