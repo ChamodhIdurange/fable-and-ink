@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://fable-and-ink-server.onrender.com/api/:path*" }
+    { "source": "/api/:path*", "destination": "https://fable-and-ink.onrender.com/api/:path*" }
   ]
 }
