@@ -1,10 +1,13 @@
-import { pubGenreOptions, visOptionDefs } from '../data.js'
+import { pubGenreOptions, visOptionDefs, genreColor } from '../data.js'
+import StoryCard from '../components/StoryCard.jsx'
 import { IconChevronLeft } from '../components/Icon.jsx'
 
 const pill = (on) => (on ? 'nxb-pill nxb-pill--selected' : 'nxb-pill')
 
 export default function Publish({
   go,
+  authorName = '',
+  authorInitials = '',
   pubTitle,
   onPubTitle,
   pubBlurb,
@@ -16,18 +19,38 @@ export default function Publish({
   saveDraft,
   doPublish,
 }) {
+  const primaryGenre = pubGenresSel[0] ?? 'Literary'
+  const preview = {
+    id: 'preview',
+    title: pubTitle.trim() || 'Untitled story',
+    blurb: pubBlurb.trim() || 'Your blurb appears here — one or two sentences that lead with the tension.',
+    genre: primaryGenre,
+    genreColor: genreColor(primaryGenre),
+    readTime: 15,
+    author: authorName || 'You',
+    initials: authorInitials || 'YOU',
+    stats: 'not published yet',
+  }
+
   return (
     <main data-screen-label="Publish" className="fi-page fi-page--narrow">
       <button className="nxb-pill fi-back-pill" onClick={() => go('editor')}>
         <IconChevronLeft size={16} />
         Back to editor
       </button>
-      <h1 className="h1" style={{ margin: '0 0 4px', textWrap: 'balance' }}>
+      <span className="fi-eyebrow">Ship it</span>
+      <h1 className="h1" style={{ margin: '0 0 6px' }}>
         Publish your story
       </h1>
-      <p className="body" style={{ margin: '0 0 32px', color: 'var(--nxb-text-muted)' }}>
+      <p className="body" style={{ margin: '0 0 28px' }}>
         Readers see the title, blurb and genre — discovery is quality-first from there.
       </p>
+
+      {/* Exactly what the story will look like on the Discover shelf. */}
+      <div className="fi-publish-preview">
+        <span className="label">live preview · discover card</span>
+        <StoryCard story={preview} preview />
+      </div>
 
       <div className="fi-form-card">
         <div className="fi-field">

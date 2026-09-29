@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { genreColor } from '../data.js'
+import Reveal from '../components/Reveal.jsx'
 import { IconChevronRight, IconGitFork, IconBook, IconAudioLines, IconSparkles } from '../components/Icon.jsx'
 
 const compact = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n ?? 0))
@@ -12,8 +13,10 @@ export default function Profile({ profile, openStory, go, saveProfile }) {
 
   if (!profile) {
     return (
-      <main className="fi-loading">
-        <span className="meta">Loading profile…</span>
+      <main className="fi-loading" aria-busy="true">
+        <span className="fi-skel" style={{ width: '100%', height: 150, borderRadius: 28 }} />
+        <span className="fi-skel" style={{ width: '100%', height: 96, borderRadius: 20 }} />
+        <span className="fi-skel" style={{ width: '70%', height: 26 }} />
       </main>
     )
   }
@@ -37,7 +40,7 @@ export default function Profile({ profile, openStory, go, saveProfile }) {
     <main data-screen-label="Profile" className="fi-page fi-page--profile">
       {/* Header card */}
       <div className="fi-profile-head">
-        <span className="fi-avatar fi-avatar--lg" style={{ background: 'var(--nxb-surface-1)' }}>
+        <span className="fi-avatar fi-avatar--lg" style={{ position: 'relative' }}>
           {user.initials}
         </span>
 
@@ -109,22 +112,19 @@ export default function Profile({ profile, openStory, go, saveProfile }) {
       {/* Stats band */}
       {stats && (
         <div className="fi-stats">
-          <div className="fi-stat">
-            <span className="fi-stat__label">Published stories</span>
-            <span className="fi-stat__value">{stats.published}</span>
-          </div>
-          <div className="fi-stat">
-            <span className="fi-stat__label">Total reads</span>
-            <span className="fi-stat__value">{compact(stats.totalReads)}</span>
-          </div>
-          <div className="fi-stat">
-            <span className="fi-stat__label">Forks of {firstName}&rsquo;s work</span>
-            <span className="fi-stat__value">{stats.totalForks}</span>
-          </div>
-          <div className="fi-stat">
-            <span className="fi-stat__label">Writing since</span>
-            <span className="fi-stat__value">{stats.joinedYear}</span>
-          </div>
+          {[
+            ['Published stories', stats.published],
+            ['Total reads', compact(stats.totalReads)],
+            [`Forks of ${firstName}'s work`, stats.totalForks],
+            ['Writing since', stats.joinedYear],
+          ].map(([label, value], i) => (
+            <Reveal key={label} delay={i * 80}>
+              <div className="fi-stat">
+                <span className="fi-stat__label">{label}</span>
+                <span className="fi-stat__value">{value}</span>
+              </div>
+            </Reveal>
+          ))}
         </div>
       )}
 

@@ -10,8 +10,8 @@ const fmt = (s) => {
 export default function MobileReader({ playing, togglePlay, progress, story }) {
   if (!story?.chapters?.length) {
     return (
-      <main className="fi-loading">
-        <span className="meta">Loading reader…</span>
+      <main className="fi-loading" aria-busy="true">
+        <span className="fi-skel" style={{ width: 392, maxWidth: '100%', height: 520, borderRadius: 44, margin: '0 auto' }} />
       </main>
     )
   }

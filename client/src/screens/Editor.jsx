@@ -68,7 +68,7 @@ export default function Editor({
             DRAFT
           </span>
         </div>
-        <div className="nxb-icon-btn-group" style={{ height: 34 }}>
+        <div className="nxb-icon-btn-group">
           <button className={pill(tab === 'write')} onClick={() => setTab('write')}>
             Write
           </button>
@@ -114,7 +114,7 @@ export default function Editor({
 
       {/* Write tab */}
       {isWrite && (
-        <div className="fi-editor-layout">
+        <div className={`fi-editor-layout${sideOpen ? '' : ' fi-editor-layout--solo'}`}>
           <div className="fi-editor-main">
             <input
               value={draftChapterTitle}
@@ -122,8 +122,8 @@ export default function Editor({
               aria-label="chapter title"
               className="fi-editor-title-input"
             />
-            <div className="meta" style={{ marginBottom: 20 }}>
-              Chapter 3 · {wordCount} words · saved just now
+            <div className="meta" style={{ marginBottom: 24 }}>
+              {wordCount} words · saved just now
             </div>
             <textarea value={draft} onChange={onDraft} aria-label="chapter text" className="fi-editor-body" />
             <div className="meta" style={{ marginTop: 12 }}>
@@ -289,10 +289,13 @@ export default function Editor({
       {/* Arrange tab */}
       {!isWrite && (
         <div className="fi-stack" style={{ gap: 16 }}>
-          <p className="body" style={{ margin: 0, color: 'var(--nxb-text-muted)' }}>
-            Drag scenes to reorder. Flagged cards carry their Story Health note so you know why they
-            might want to move.
-          </p>
+          <div>
+            <span className="fi-eyebrow">Arrange</span>
+            <p className="body" style={{ margin: 0 }}>
+              Drag scenes to reorder. Flagged cards carry their Story Health note so you know why
+              they might want to move.
+            </p>
+          </div>
           <div className="fi-scene-grid">
             {scenes.map((s, i) => {
               const id = s.slug

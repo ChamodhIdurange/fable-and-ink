@@ -188,3 +188,30 @@ export function IconGrip(p) {
     </Svg>
   )
 }
+
+export function IconArrowRight(p) {
+  return (
+    <Svg {...p}>
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </Svg>
+  )
+}
+
+export function IconFeather(p) {
+  return (
+    <Svg {...p}>
+      <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
+      <line x1="16" x2="2" y1="8" y2="22" />
+      <line x1="17.5" x2="9" y1="15" y2="15" />
+    </Svg>
+  )
+}
+
+export function IconHeadphones(p) {
+  return (
+    <Svg {...p}>
+      <path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" />
+    </Svg>
+  )
+}

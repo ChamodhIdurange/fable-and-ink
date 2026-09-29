@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -17,11 +18,39 @@ const fmt = (s) => {
 }
 const fmtReads = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n ?? 0))
 
+// Bar heights for the narration waveform. Fixed rather than random so the
+// shape is stable across re-renders.
+const WAVE = [0.4, 0.75, 0.5, 1, 0.65, 0.9, 0.45, 0.8, 0.55]
+
+/** Fraction of the page scrolled, 0–1, updated on a rAF tick. */
+function useScrollProgress() {
+  const [pct, setPct] = useState(0)
+  useEffect(() => {
+    let frame = 0
+    const read = () => {
+      frame = 0
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setPct(max > 0 ? Math.min(1, window.scrollY / max) : 0)
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(read)
+    }
+    read()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+  return pct
+}
+
 export default function Reader({
   go,
   story,
   tree,
-  blindRead,
   chapter,
   setChapter,
   readerFs,
@@ -43,17 +72,39 @@ export default function Reader({
   cycleSpeed,
   speeds,
 }) {
+  const scrolled = useScrollProgress()
+
+  const chapters = story?.chapters ?? []
+  const chapterCount = chapters.length || 1
+  const idx = Math.min(chapter, chapterCount - 1)
+
+  // Arrow keys page through chapters, but not while the reader is typing in a
+  // field somewhere or holding a modifier for a browser shortcut.
+  useEffect(() => {
+    if (!story) return
+    const onKey = (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      const el = document.activeElement
+      if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return
+      if (e.key === 'ArrowLeft' && idx > 0) setChapter(idx - 1)
+      if (e.key === 'ArrowRight' && idx < chapterCount - 1) setChapter(idx + 1)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [story, idx, chapterCount, setChapter])
+
   if (!story) {
     return (
-      <main className="fi-loading">
-        <span className="meta">Loading story…</span>
+      <main className="fi-loading" aria-busy="true">
+        <span className="fi-skel" style={{ width: 120, height: 32, borderRadius: 9999 }} />
+        <span className="fi-skel" style={{ width: '82%', height: 46, marginTop: 14 }} />
+        <span className="fi-skel" style={{ width: '54%', height: 46 }} />
+        <span className="fi-skel" style={{ width: 200, height: 22, marginTop: 10 }} />
+        <span className="fi-skel" style={{ width: '100%', height: 220, marginTop: 24, borderRadius: 20 }} />
       </main>
     )
   }
 
-  const chapters = story.chapters ?? []
-  const chapterCount = chapters.length || 1
-  const idx = Math.min(chapter, chapterCount - 1)
   const ch = chapters[idx] ?? { title: '', paras: [], secs: 300 }
   const dur = ch.secs || 300
   const progressPct = `${Math.min(100, (progress / dur) * 100)}%`
@@ -62,6 +113,11 @@ export default function Reader({
 
   return (
     <>
+      {/* Reading position — the only always-on chrome in the reader. */}
+      <div className="fi-read-progress" aria-hidden="true">
+        <div className="fi-read-progress__fill" style={{ width: `${scrolled * 100}%` }} />
+      </div>
+
       <main data-screen-label="Reader" className="fi-page fi-page--reader">
         <button className="nxb-pill fi-back-pill" onClick={() => go('discover')}>
           <IconChevronLeft size={16} />
@@ -73,7 +129,7 @@ export default function Reader({
           <div className="fi-row fi-row--8">
             <span
               className="fi-tag"
-              style={{ color: c, background: `color-mix(in srgb, ${c} 10%, transparent)` }}
+              style={{ color: c, background: `color-mix(in srgb, ${c} 14%, transparent)` }}
             >
               {story.genre}
             </span>
@@ -81,7 +137,7 @@ export default function Reader({
               {story.readTime} min · {chapterCount} chapters
             </span>
           </div>
-          <h1 className="h1">{story.title}</h1>
+          <h1>{story.title}</h1>
           {!story.blind && (
             <div className="fi-row fi-row--8">
               <span className="fi-avatar fi-avatar--sm">{story.initials}</span>
@@ -90,7 +146,7 @@ export default function Reader({
             </div>
           )}
           {story.blind && (
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--nxb-text-muted)' }}>
+            <span className="meta" style={{ fontFamily: 'var(--font-mono)' }}>
               {story.blindId} · author hidden while Blind Read is on
             </span>
           )}
@@ -98,7 +154,7 @@ export default function Reader({
 
         {/* Toolbar */}
         <div className="fi-reader-toolbar">
-          <button className="nxb-pill" onClick={toggleChapters}>
+          <button className={pill(chaptersOpen)} onClick={toggleChapters}>
             <IconList size={16} />
             Chapters
           </button>
@@ -118,7 +174,7 @@ export default function Reader({
               className="nxb-icon-btn nxb-icon-btn--xs"
               onClick={fontDown}
               aria-label="Smaller text"
-              style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 500 }}
+              style={{ fontSize: 12, fontWeight: 500 }}
             >
               A&minus;
             </button>
@@ -126,7 +182,7 @@ export default function Reader({
               className="nxb-icon-btn nxb-icon-btn--xs"
               onClick={fontUp}
               aria-label="Larger text"
-              style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 500 }}
+              style={{ fontSize: 15, fontWeight: 500 }}
             >
               A+
             </button>
@@ -142,8 +198,8 @@ export default function Reader({
                 className={`fi-chapter-row fi-soft-hover${i === idx ? ' is-current' : ''}`}
                 onClick={() => setChapter(i, { fromList: true })}
               >
-                <span className="fi-chapter-row__num">{'0' + (i + 1)}</span>
-                <span className="body" style={{ color: 'var(--nxb-text-primary)', flex: 1 }}>
+                <span className="fi-chapter-row__num">{String(i + 1).padStart(2, '0')}</span>
+                <span className="body" style={{ color: 'var(--fi-ink)', flex: 1 }}>
                   {cc.title}
                 </span>
                 <span className="meta">{cc.mins} min</span>
@@ -156,45 +212,47 @@ export default function Reader({
         {treeOpen && (
           <div className="fi-panel fi-tree-panel">
             <div className="fi-tree__head">
-              <IconGitFork size={16} style={{ color: 'var(--nxb-text-muted)' }} />
-              <span className="h3" style={{ margin: 0 }}>
-                Remix tree
-              </span>
+              <IconGitFork size={16} style={{ color: 'var(--fi-ink-3)' }} />
+              <span className="h3">Remix tree</span>
               <span className="meta">· forks keep a permanent link to the original</span>
             </div>
-            <div className="fi-stack">
+            <div className="fi-stack fi-stack--8">
               <div className="fi-tree__root">
                 <span className="fi-tag fi-tag--outline">ORIGINAL</span>
-                <span className="body" style={{ color: 'var(--nxb-text-primary)' }}>
+                <span className="body" style={{ color: 'var(--fi-ink)' }}>
                   {tree?.original?.title ?? story.title}
                 </span>
                 <span className="meta" style={{ marginLeft: 'auto' }}>
                   {tree?.original?.by ?? ''}
                 </span>
               </div>
-              <div className="fi-tree__branches">
-                {(tree?.forks ?? []).map((f) => (
-                  <div key={f.id} className="fi-tree__fork">
-                    <span className="fi-tree__tick" />
-                    <span className="fi-tag fi-tag--outline">{f.kind}</span>
-                    <span className="body" style={{ color: 'var(--nxb-text-primary)' }}>
-                      {f.title}
-                    </span>
-                    <span className="meta" style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                      {f.by}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              {(tree?.forks ?? []).length > 0 && (
+                <div className="fi-tree__branches">
+                  {tree.forks.map((f) => (
+                    <div key={f.id} className="fi-tree__fork">
+                      <span className="fi-tree__tick" />
+                      <span className="fi-tag fi-tag--outline">{f.kind}</span>
+                      <span className="body" style={{ color: 'var(--fi-ink)' }}>
+                        {f.title}
+                      </span>
+                      <span className="meta" style={{ marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                        {f.by}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* Chapter heading */}
         <div className="fi-chapter-head">
-          <span className="fi-chapter-head__num">0{idx + 1}</span>
-          <div className="fi-stack fi-stack--2">
-            <span className="label">chapter</span>
+          <span className="fi-chapter-head__num" aria-hidden="true">
+            {String(idx + 1).padStart(2, '0')}
+          </span>
+          <div className="fi-stack fi-stack--4">
+            <span className="label">chapter {idx + 1}</span>
             <h2 className="fi-chapter-head__title">{ch.title}</h2>
           </div>
         </div>
@@ -233,9 +291,20 @@ export default function Reader({
       {/* Floating Listen player */}
       {listenOpen && (
         <div className="fi-player">
-          <button className="fi-player__play fi-listen-play" onClick={togglePlay} aria-label="Play or pause narration">
-            {playing ? <IconPause size={16} /> : <IconPlay size={16} style={{ marginLeft: 2 }} />}
+          <button className="fi-player__play" onClick={togglePlay} aria-label={playing ? 'Pause narration' : 'Play narration'}>
+            {playing ? <IconPause size={17} /> : <IconPlay size={17} style={{ marginLeft: 2 }} />}
           </button>
+
+          <div className={`fi-wave${playing ? ' is-playing' : ''}`} aria-hidden="true">
+            {WAVE.map((h, i) => (
+              <span
+                key={i}
+                className="fi-wave__bar"
+                style={{ height: `${h * 100}%`, '--fi-delay': `${i * 90}ms` }}
+              />
+            ))}
+          </div>
+
           <div className="fi-player__body">
             <div className="fi-player__meta">
               <span className="body-s fi-player__title">
@@ -249,6 +318,7 @@ export default function Reader({
               <div className="fi-player__fill" style={{ width: progressPct }} />
             </div>
           </div>
+
           <button className="nxb-pill fi-player__speed" onClick={cycleSpeed}>
             {speeds[speedIdx]}&times;
           </button>

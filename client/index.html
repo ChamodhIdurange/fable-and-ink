@@ -3,13 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f9f9fb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121214" media="(prefers-color-scheme: dark)" />
     <title>Fable &amp; Ink — Read it. Write it. Fork it.</title>
     <meta
       name="description"
       content="Fable&Ink is where stories get read for how they're written — not who wrote them."
     />
-    <!-- NxB Unify design system: tokens, fonts, and component layer (imports the other three) -->
+
+    <!-- NxB Unify: kept for the licensed UI/mono faces and the .nxb-* component
+         skeletons. The app layer (src/styles.css) re-skins it end to end. -->
     <link rel="stylesheet" href="/ds/styles.css" />
+
+    <!-- Editorial type: Playfair Display for headlines, Newsreader for long-form
+         prose, Inter for interface. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Inter:wght@400;500;600&display=swap"
+    />
   </head>
   <body>
     <div id="root"></div>

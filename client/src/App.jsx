@@ -28,6 +28,7 @@ export default function App() {
   const [dark, setDark] = useState(false)
   const [blindRead, setBlindRead] = useState(false)
   const [genreFilter, setGenreFilter] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const [readerFs, setReaderFs] = useState(18)
   const [chapter, setChapterIdx] = useState(0)
@@ -150,6 +151,12 @@ export default function App() {
     if (next === 'editor') loadDraft()
     if (next === 'profile') loadProfile()
     if (next === 'mobile' && !currentStory && samples[0]) loadStory(samples[0].id)
+  }
+
+  const search = (q) => {
+    setSearchQuery(q.trim())
+    setGenreFilter('All')
+    go('discover')
   }
 
   async function loadStory(id, chapterIndex = 0) {
@@ -428,9 +435,11 @@ export default function App() {
           }}
           openStory={openStory}
           pickCategory={(g) => {
+            setSearchQuery('')
             setGenreFilter(genreOptions.includes(g) ? g : 'All')
             go('discover')
           }}
+          search={search}
           samples={samples}
         />
       )}
@@ -441,6 +450,8 @@ export default function App() {
           toggleBlind={() => setBlindRead((v) => !v)}
           genreFilter={genreFilter}
           setGenreFilter={setGenreFilter}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
           openStory={openStory}
           stories={feed}
           progress={continueReading}
@@ -522,6 +533,8 @@ export default function App() {
           setVisibility={setVisibility}
           saveDraft={() => showToast('Draft saved')}
           doPublish={doPublish}
+          authorName={currentUser?.name ?? ''}
+          authorInitials={currentUser?.initials ?? ''}
         />
       )}
 

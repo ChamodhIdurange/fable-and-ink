@@ -9,7 +9,7 @@ export default function Header({ screen, dark, go, toggleTheme, user }) {
   const initials = user?.initials ?? '··'
   return (
     <header className="fi-header">
-      <button className="fi-logo logo-mark" onClick={() => go('discover')}>
+      <button className="fi-logo" onClick={() => go('home')} aria-label="Fable & Ink — home">
         Fable<span className="slash">&amp;Ink</span>
       </button>
       <nav className="fi-header__nav" aria-label="Primary">
@@ -33,7 +33,7 @@ export default function Header({ screen, dark, go, toggleTheme, user }) {
         <button
           className="nxb-icon-btn nxb-icon-btn--xs"
           onClick={toggleTheme}
-          aria-label="Toggle dark mode"
+          aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {dark ? <IconSun size={16} /> : <IconMoon size={16} />}
         </button>

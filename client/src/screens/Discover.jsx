@@ -1,5 +1,7 @@
 import { genreOptions, genreColor } from '../data.js'
-import { IconEyeOff, IconBook, IconClock } from '../components/Icon.jsx'
+import Reveal from '../components/Reveal.jsx'
+import StoryCard from '../components/StoryCard.jsx'
+import { IconEyeOff, IconBook } from '../components/Icon.jsx'
 
 const pill = (on) => (on ? 'nxb-pill nxb-pill--selected' : 'nxb-pill')
 
@@ -8,43 +10,35 @@ export default function Discover({
   toggleBlind,
   genreFilter,
   setGenreFilter,
+  searchQuery = '',
+  setSearchQuery,
   openStory,
   stories = [],
   progress,
 }) {
-  // The server already filters by genre and applies the Blind Read transform;
-  // here we only derive per-card styling from the genre color + blind flag.
-  const feed = stories.map((s) => {
-    const c = s.genreColor || genreColor(s.genre)
-    const blind = s.blind
-    return {
-      ...s,
-      tagColor: blind ? `color-mix(in srgb, ${c} 60%, #ffffff)` : c,
-      tagBg: blind
-        ? `color-mix(in srgb, ${c} 22%, transparent)`
-        : `color-mix(in srgb, ${c} 10%, transparent)`,
-      cardBg: blind ? 'var(--nxb-surface-4)' : 'var(--fi-card)',
-      cardBorder: blind ? 'rgba(255, 255, 255, 0.08)' : 'var(--nxb-border-low)',
-      washBg: blind ? 'rgba(255, 255, 255, 0.05)' : `color-mix(in srgb, ${c} 14%, transparent)`,
-      titleColor: blind ? '#fafafa' : 'var(--nxb-text-primary)',
-      bodyColor: blind ? '#c7c7c7' : 'var(--nxb-text-secondary)',
-      metaColor: blind ? '#afafaf' : 'var(--nxb-text-muted)',
-    }
-  })
-
+  // The feed API filters by genre and applies the Blind Read transform; the
+  // free-text query is matched here against what the server already returned.
+  const q = searchQuery.trim().toLowerCase()
+  const feed = q
+    ? stories.filter((s) =>
+        [s.title, s.blurb, s.genre, s.blind ? '' : s.author]
+          .filter(Boolean)
+          .some((field) => field.toLowerCase().includes(q)),
+      )
+    : stories
   return (
     <main data-screen-label="Discover" className="fi-page fi-page--wide">
       {/* Hero */}
       <section className="fi-disc-hero">
-        <span className="fi-hero__glow fi-hero__glow--write" aria-hidden="true" style={{ opacity: 0.16 }} />
         <div className="fi-disc-hero__copy">
-          <span className="fi-kicker" style={{ fontSize: 11 }}>
+          <span className="fi-eyebrow" style={{ marginBottom: 2 }}>
             Discover
           </span>
-          <h1 className="fi-disc-hero__title">Stories that earn the read.</h1>
+          <h1 className="fi-disc-hero__title">
+            Stories that <em>earn</em> the read.
+          </h1>
           <p className="fi-disc-hero__sub">
-            Written by <span style={{ color: '#a867ee' }}>{'{anyone}'}</span>. Discovered on craft,
-            not follower count.
+            Written by anyone. Discovered on craft, not follower count.
           </p>
         </div>
         <div className="fi-blind-toggle">
@@ -64,8 +58,8 @@ export default function Discover({
       {/* Blind Read active notice */}
       {blindRead && (
         <div className="fi-blind-note">
-          <IconEyeOff size={16} style={{ color: 'var(--nxb-text-muted)', flex: 'none' }} />
-          <span className="body" style={{ color: 'var(--nxb-text-secondary)', flex: 1, minWidth: 200 }}>
+          <IconEyeOff size={16} style={{ color: 'var(--fi-accent)', flex: 'none' }} />
+          <span className="body" style={{ flex: 1, minWidth: 200 }}>
             Blind Read is on — authors, reads and fork counts are hidden. Every story opens with its
             first line instead.
           </span>
@@ -76,10 +70,10 @@ export default function Discover({
       {/* Continue reading — only when the reader has a saved position */}
       {progress && (
         <div className="fi-continue fi-row-hover" onClick={() => openStory(progress.storyId)}>
-          <IconBook size={20} style={{ color: 'var(--nxb-text-muted)', flex: 'none' }} />
-          <div className="fi-stack fi-stack--6" style={{ flex: 1, minWidth: 0 }}>
+          <IconBook size={20} style={{ color: 'var(--fi-ink-3)', flex: 'none' }} />
+          <div className="fi-stack fi-stack--8" style={{ flex: 1, minWidth: 0 }}>
             <div className="fi-continue__meta">
-              <span className="body" style={{ color: 'var(--nxb-text-primary)', fontWeight: 500 }}>
+              <span className="body" style={{ color: 'var(--fi-ink)', fontWeight: 500 }}>
                 {progress.title}
               </span>
               <span className="meta">
@@ -92,13 +86,26 @@ export default function Discover({
           </div>
           <button
             className="nxb-btn nxb-btn--secondary nxb-btn--sm"
-            style={{ flex: 'none', height: 36 }}
+            style={{ flex: 'none' }}
             onClick={(e) => {
               e.stopPropagation()
               openStory(progress.storyId)
             }}
           >
             Resume
+          </button>
+        </div>
+      )}
+
+      {/* Active search */}
+      {q && (
+        <div className="fi-searchbar">
+          <span className="body" style={{ flex: 1, minWidth: 180 }}>
+            {feed.length} {feed.length === 1 ? 'story' : 'stories'} matching{' '}
+            <strong style={{ color: 'var(--fi-ink)' }}>&ldquo;{searchQuery}&rdquo;</strong>
+          </span>
+          <button className="nxb-pill" onClick={() => setSearchQuery('')}>
+            Clear search
           </button>
         </div>
       )}
@@ -114,74 +121,34 @@ export default function Discover({
       </div>
 
       {/* Feed */}
-      <div className="fi-grid--feed">
-        {feed.map((st) => (
-          <article
-            key={st.id}
-            data-lift
-            className="fi-story-card"
-            onClick={() => openStory(st.id)}
-            style={{ background: st.cardBg, borderColor: st.cardBorder }}
-          >
-            <div className="fi-story-card__wash" style={{ background: st.washBg }}>
-              <span className="fi-tag" style={{ color: st.tagColor, background: st.tagBg }}>
-                {st.genre}
-              </span>
-              <span
-                className="meta"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: st.metaColor }}
-              >
-                <IconClock size={12} />
-                {st.readTime} min
-              </span>
-              {st.blind && (
-                <span
-                  style={{
-                    marginLeft: 'auto',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: 11,
-                    color: '#afafaf',
-                  }}
-                >
-                  {st.blindId}
-                </span>
-              )}
-            </div>
-            <div className="fi-stack fi-stack--6">
-              <h2 className="h2" style={{ color: st.titleColor }}>
-                {st.title}
-              </h2>
-              <p className="body fi-story-card__blurb" style={{ color: st.bodyColor }}>
-                {st.blurb}
-              </p>
-            </div>
-            {!st.blind && (
-              <div className="fi-story-card__footer">
-                <span className="fi-avatar fi-avatar--sm">{st.initials}</span>
-                <span className="body-s" style={{ color: 'var(--nxb-text-primary)' }}>
-                  {st.author}
-                </span>
-                <span className="meta" style={{ marginLeft: 'auto' }}>
-                  {st.stats}
-                </span>
-              </div>
-            )}
-            {st.blind && (
-              <div
-                className="fi-story-card__footer fi-stack fi-stack--4"
-                style={{ borderTopColor: 'rgba(255, 255, 255, 0.10)', alignItems: 'flex-start', flexDirection: 'column' }}
-              >
-                <span className="label" style={{ color: '#afafaf' }}>
-                  first line
-                </span>
-                <span className="body" style={{ color: '#c7c7c7' }}>
-                  &ldquo;{st.firstLine}&rdquo;
-                </span>
-              </div>
-            )}
-          </article>
-        ))}
-      </div>
+      {feed.length > 0 ? (
+        <div className="fi-grid--feed">
+          {feed.map((st, i) => (
+            <Reveal key={st.id} delay={Math.min(i, 5) * 70}>
+              <StoryCard story={st} onOpen={openStory} />
+            </Reveal>
+          ))}
+        </div>
+      ) : (
+        <div className="fi-empty">
+          <p className="body" style={{ margin: 0 }}>
+            {q
+              ? `Nothing matches “${searchQuery}” yet.`
+              : `Nothing on this shelf yet${genreFilter !== 'All' ? ` under ${genreFilter}` : ''}.`}
+          </p>
+          {(q || genreFilter !== 'All') && (
+            <button
+              className="nxb-btn nxb-btn--secondary nxb-btn--sm"
+              onClick={() => {
+                setSearchQuery('')
+                setGenreFilter('All')
+              }}
+            >
+              Show every story
+            </button>
+          )}
+        </div>
+      )}
     </main>
   )
 }
